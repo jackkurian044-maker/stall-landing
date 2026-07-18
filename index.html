@@ -22,7 +22,8 @@
   --white: #FFFFFF;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', sans-serif; background: var(--paper); color: var(--ink); line-height: 1.6; }
+html { overflow-x: hidden; }
+body { font-family: 'Inter', sans-serif; background: var(--paper); color: var(--ink); line-height: 1.6; overflow-x: hidden; }
 .display { font-family: 'Playfair Display', serif; }
 .mono { font-family: 'IBM Plex Mono', monospace; }
 
@@ -35,7 +36,7 @@ nav {
 }
 .nav-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 900; letter-spacing: -0.5px; }
 .nav-links { display: flex; gap: 8px; align-items: center; }
-.nav-btn { padding: 8px 18px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; border: 1.5px solid var(--ink); background: transparent; color: var(--ink); transition: all .15s; }
+.nav-btn { padding: 8px 18px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; border: 1.5px solid var(--ink); background: transparent; color: var(--ink); transition: all .15s; white-space: nowrap; }
 .nav-btn.primary { background: var(--ink); color: var(--paper); }
 .nav-btn:hover { opacity: .8; }
 
@@ -47,13 +48,14 @@ nav {
   min-height: 80vh;
 }
 .hero-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; margin-bottom: 20px; }
-.hero-title { font-family: 'Playfair Display', serif; font-size: clamp(42px, 5vw, 68px); font-weight: 900; line-height: 1.05; letter-spacing: -1px; margin-bottom: 24px; }
+.hero-title { font-family: 'Playfair Display', serif; font-size: clamp(32px, 5vw, 68px); font-weight: 900; line-height: 1.05; letter-spacing: -1px; margin-bottom: 24px; }
 .hero-title em { font-style: italic; color: var(--teal); }
 .hero-sub { font-size: 17px; color: var(--muted); line-height: 1.7; margin-bottom: 36px; max-width: 440px; }
 
 /* ROLE TOGGLE */
 .role-toggle {
   display: inline-flex; border: 1.5px solid var(--ink); border-radius: 8px; overflow: hidden; margin-bottom: 36px;
+  max-width: 100%;
 }
 .role-btn {
   padding: 10px 24px; font-size: 14px; font-weight: 600; cursor: pointer;
@@ -116,12 +118,33 @@ nav {
 /* HOW IT WORKS */
 .how-section { padding: 80px 5%; border-bottom: 1.5px solid var(--ink); }
 .section-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; margin-bottom: 12px; }
-.section-title { font-family: 'Playfair Display', serif; font-size: clamp(28px, 3vw, 40px); font-weight: 900; line-height: 1.1; margin-bottom: 48px; }
+.section-title { font-family: 'Playfair Display', serif; font-size: clamp(24px, 3vw, 40px); font-weight: 900; line-height: 1.15; margin-bottom: 48px; }
 .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1.5px solid var(--ink); border-radius: 12px; overflow: hidden; }
 .step-card { padding: 32px 28px; border-right: 1.5px solid var(--ink); background: var(--white); }
 .step-card:last-child { border-right: none; }
 .step-num { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); margin-bottom: 16px; }
 .step-icon { font-size: 32px; margin-bottom: 16px; }
+
+/* Compact variant: smaller section, simple line-icon SVGs instead of emoji */
+.how-compact { padding: 28px 5%; }
+.how-compact .section-eyebrow { margin-bottom: 6px; }
+.how-compact .section-title { font-size: clamp(17px, 2vw, 22px); margin-bottom: 16px; }
+.steps-grid-compact .step-card { padding: 12px 14px; }
+.steps-grid-compact .step-num { display: none; }
+.steps-grid-compact .step-icon { width: 20px; height: 20px; margin-bottom: 6px; color: var(--teal); font-size: 16px; line-height: 20px; display: flex; align-items: center; justify-content: center; }
+.steps-grid-compact .step-icon svg { width: 100%; height: 100%; display: block; }
+.steps-grid-compact .step-title { font-size: 13px; margin-bottom: 2px; }
+.steps-grid-compact .step-desc { font-size: 11.5px; line-height: 1.4; }
+
+/* Compact benefits variant */
+.benefits-compact { padding: 28px 5%; }
+.benefits-compact .section-eyebrow { margin-bottom: 6px; }
+.benefits-compact .section-title { font-size: clamp(17px, 2vw, 22px); margin-bottom: 16px; }
+.benefits-grid-compact { gap: 10px; }
+.benefits-grid-compact .benefit-card { padding: 14px 16px; }
+.benefits-grid-compact .benefit-icon { font-size: 18px; margin-bottom: 6px; }
+.benefits-grid-compact .benefit-title { font-size: 13px; margin-bottom: 2px; }
+.benefits-grid-compact .benefit-desc { font-size: 11.5px; line-height: 1.4; }
 .step-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
 .step-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
 
@@ -138,7 +161,7 @@ nav {
 /* PREMIUM SECTION */
 .premium-section { padding: 80px 5%; border-bottom: 1.5px solid var(--ink); background: var(--ink); color: var(--paper); }
 .premium-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
-.premium-title { font-family: 'Playfair Display', serif; font-size: clamp(28px, 3vw, 44px); font-weight: 900; line-height: 1.1; margin-bottom: 16px; }
+.premium-title { font-family: 'Playfair Display', serif; font-size: clamp(26px, 3vw, 44px); font-weight: 900; line-height: 1.1; margin-bottom: 16px; }
 .premium-sub { font-size: 15px; color: #9CA3AF; line-height: 1.7; margin-bottom: 32px; }
 .premium-features { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
 .premium-feature { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; }
@@ -147,6 +170,13 @@ nav {
 .premium-price { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 900; }
 .premium-price span { font-size: 18px; font-weight: 400; color: #9CA3AF; font-family: 'Inter', sans-serif; }
 .premium-cta { margin-top: 20px; width: 100%; padding: 13px; background: var(--teal); color: var(--white); border: none; border-radius: 7px; font-size: 15px; font-weight: 600; cursor: pointer; }
+.plan-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 10px; flex-wrap: wrap; }
+.billing-toggle-wrap { display: inline-flex; border: 1.5px solid #374151; border-radius: 7px; overflow: hidden; flex-shrink: 0; }
+.billing-btn { padding: 5px 12px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; }
+.feature-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 13px; padding: 8px 0; border-bottom: 1px solid #1F2937; }
+.feature-row:last-child { border-bottom: none; }
+.feature-row span:first-child { color: #9CA3AF; }
+.feature-row span:last-child { color: #1D9E75; font-weight: 600; white-space: nowrap; }
 
 /* TESTIMONIALS */
 .testimonials { padding: 80px 5%; border-bottom: 1.5px solid var(--ink); }
@@ -159,28 +189,108 @@ nav {
 
 /* CTA FOOTER */
 .cta-section { padding: 100px 5%; text-align: center; border-bottom: 1.5px solid var(--ink); }
-.cta-title { font-family: 'Playfair Display', serif; font-size: clamp(36px, 5vw, 60px); font-weight: 900; line-height: 1.05; margin-bottom: 20px; }
+.cta-title { font-family: 'Playfair Display', serif; font-size: clamp(30px, 5vw, 60px); font-weight: 900; line-height: 1.05; margin-bottom: 20px; }
 .cta-sub { font-size: 17px; color: var(--muted); margin-bottom: 36px; }
 .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
 /* FOOTER */
-footer { padding: 32px 5%; display: flex; align-items: center; justify-content: space-between; }
+footer { padding: 32px 5%; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .footer-logo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 900; }
 .footer-copy { font-size: 12px; color: var(--muted); }
 
-/* RESPONSIVE */
+/* ============ RESPONSIVE (TABLET) ============ */
+@media (max-width: 900px) {
+  .premium-grid { grid-template-columns: 1fr; gap: 40px; }
+}
+
+/* ============ RESPONSIVE (MOBILE) ============ */
 @media (max-width: 768px) {
-  .hero { grid-template-columns: 1fr; min-height: auto; padding: 48px 5%; }
-  .hero-visual { min-height: 300px; }
+  /* Nav: keep it to one clear action, drop the in-page text links */
+  nav { padding: 0 5%; height: 54px; }
+  .nav-logo { font-size: 19px; }
+  .nav-links { gap: 6px; }
+  .nav-btn:not(.primary) { display: none; }
+  .nav-btn.primary { padding: 8px 14px; font-size: 13px; }
+
+  /* Hero: shorter, single column, full-width tappable CTAs */
+  .hero { grid-template-columns: 1fr; min-height: auto; padding: 32px 5% 36px; gap: 32px; }
+  .hero-eyebrow { font-size: 11px; margin-bottom: 14px; }
+  .hero-title { font-size: clamp(28px, 9vw, 38px); margin-bottom: 16px; }
+  .hero-sub { font-size: 15px; margin-bottom: 22px; max-width: 100%; }
+  .role-toggle { display: flex; width: 100%; margin-bottom: 22px; }
+  .role-btn { flex: 1; padding: 11px 10px; font-size: 13px; text-align: center; }
+  .cta-row { flex-direction: column; gap: 10px; }
+  .cta-primary, .cta-secondary { width: 100%; text-align: center; padding: 14px; }
+
+  /* Map visual: fewer labels, smaller footprint */
+  .hero-visual { min-height: 220px; border-radius: 12px; }
+  .pin-dot { width: 28px; height: 28px; }
+  .pin-dot span { font-size: 13px; }
+  .pin-label { display: none; }
+  .map-card { padding: 10px 12px; bottom: 12px; left: 12px; right: 12px; }
+  .map-card-icon { width: 34px; height: 34px; font-size: 16px; }
+  .map-card-title { font-size: 12px; }
+  .map-card-sub { font-size: 10px; }
+
+  /* Stats: 2x2, tighter, second row gets a top rule instead of side rule */
   .stats-strip { grid-template-columns: repeat(2, 1fr); }
-  .stat-item:nth-child(2) { border-right: none; }
+  .stat-item { padding: 16px 4%; }
+  .stat-item:nth-child(2n) { border-right: none; }
+  .stat-item:nth-child(n+3) { border-top: 1.5px solid var(--ink); }
+  .stat-num { font-size: 26px; }
+  .stat-lbl { font-size: 11px; }
+
+  /* Section rhythm: less air, smaller headings */
+  .how-section, .benefits-section, .premium-section, .testimonials { padding: 44px 5%; }
+  .how-compact { padding: 24px 5%; }
+  .benefits-compact { padding: 24px 5%; }
+  .section-title { font-size: clamp(20px, 6vw, 26px); margin-bottom: 24px; }
+
+  /* Steps: stack, trim padding */
   .steps-grid { grid-template-columns: 1fr; }
-  .step-card { border-right: none; border-bottom: 1.5px solid var(--ink); }
+  .step-card { border-right: none; border-bottom: 1.5px solid var(--ink); padding: 20px 18px; }
   .step-card:last-child { border-bottom: none; }
-  .benefits-grid { grid-template-columns: 1fr; }
-  .premium-grid { grid-template-columns: 1fr; }
+  .steps-grid-compact .step-card { padding: 10px 14px; }
+  .step-icon { font-size: 26px; margin-bottom: 10px; }
+  .step-title { font-size: 15px; }
+  .step-desc { font-size: 13px; }
+
+  /* Benefits: stack, trim padding */
+  .benefits-grid { grid-template-columns: 1fr; gap: 12px; }
+  .benefit-card { padding: 20px; }
+  .benefits-grid-compact .benefit-card { padding: 12px 14px; }
+  .benefit-icon { font-size: 24px; margin-bottom: 10px; }
+  .benefit-title { font-size: 15px; }
+  .benefit-desc { font-size: 13px; }
+
+  /* Premium: stacked, price card compact, no cramped rows */
+  .premium-title { font-size: clamp(22px, 7vw, 30px); }
+  .premium-sub { font-size: 14px; margin-bottom: 24px; }
+  .premium-features { gap: 10px; margin-bottom: 24px; }
+  .premium-feature { font-size: 13px; }
+  .premium-price-card { padding: 20px; }
+  .premium-price { font-size: 34px; }
+  .premium-price span { font-size: 14px; }
+  .feature-row { font-size: 12px; padding: 7px 0; }
+
+  /* Testimonials: stack */
   .testimonial-grid { grid-template-columns: 1fr; }
-  .cta-title { font-size: 32px; }
+  .testimonial-card { padding: 18px; }
+
+  /* Final CTA: stack, full-width taps */
+  .cta-section { padding: 56px 5%; }
+  .cta-title { font-size: clamp(24px, 8vw, 32px); }
+  .cta-sub { font-size: 14px; margin-bottom: 24px; }
+  .cta-buttons { flex-direction: column; }
+  .cta-buttons a { width: 100%; text-align: center; }
+
+  /* Footer: stack and centre so it never squeezes */
+  footer { flex-direction: column; text-align: center; gap: 6px; padding: 24px 5%; }
+}
+
+@media (max-width: 380px) {
+  .hero-title { font-size: 26px; }
+  .role-btn { font-size: 12px; padding: 10px 6px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -205,9 +315,9 @@ footer { padding: 32px 5%; display: flex; align-items: center; justify-content: 
 <!-- HERO -->
 <section class="hero">
   <div>
-    <div class="hero-eyebrow">Bengaluru's local marketplace</div>
+    <div class="hero-eyebrow">Bengaluru, block by block</div>
     <h1 class="hero-title display">
-      Every neighbourhood<br>store, <em>found.</em>
+      Next door.<br>Finally <em>found.</em>
     </h1>
 
     <!-- ROLE TOGGLE -->
@@ -218,19 +328,19 @@ footer { padding: 32px 5%; display: flex; align-items: center; justify-content: 
 
     <!-- CUSTOMER CONTENT -->
     <div class="role-content active" id="content-customer">
-      <p class="hero-sub">Discover the pickle stall two streets away, the tailor who opens at 7am, the fresh flower vendor who's there every morning. Stall maps what Google misses.</p>
+      <p class="hero-sub">The pickle stall. The 7am tailor. The flower stand two streets over. All on one map.</p>
       <div class="cta-row">
-        <a href="https://jackkurian044-maker.github.io/Stall-App/" class="cta-primary">Find stores near me →</a>
+        <a href="https://jackkurian044-maker.github.io/Stall-App/" class="cta-primary">Show me what's nearby →</a>
         <a href="#how-customer" class="cta-secondary">See how it works</a>
       </div>
     </div>
 
     <!-- VENDOR CONTENT -->
     <div class="role-content" id="content-vendor">
-      <p class="hero-sub">Put your store on the map in 2 minutes. Get discovered by customers walking past. Let AI respond to every Google review while you focus on your business.</p>
+      <p class="hero-sub">Live in 2 minutes. Found by people walking past. Reviews on autopilot.</p>
       <div class="cta-row">
-        <a href="https://jackkurian044-maker.github.io/Stall-App/" class="cta-primary">List your store free →</a>
-        <a href="#premium" class="cta-secondary">See Premium features</a>
+        <a href="https://jackkurian044-maker.github.io/Stall-App/" class="cta-primary">Put my store on the map →</a>
+        <a href="#premium" class="cta-secondary">See the AI in action</a>
       </div>
     </div>
   </div>
@@ -294,109 +404,109 @@ footer { padding: 32px 5%; display: flex; align-items: center; justify-content: 
 </div>
 
 <!-- HOW IT WORKS — CUSTOMER -->
-<section class="how-section" id="how-customer">
+<section class="how-section how-compact" id="how-customer">
   <div class="section-eyebrow">For people looking for stores</div>
-  <h2 class="section-title display">Find what's near you<br>in three taps</h2>
-  <div class="steps-grid">
+  <h2 class="section-title display">Three taps.<br>Whole neighbourhood.</h2>
+  <div class="steps-grid steps-grid-compact">
     <div class="step-card">
       <div class="step-num mono">01</div>
-      <div class="step-icon">📍</div>
+      <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.6 7-12.4A7 7 0 1 0 5 8.6C5 13.4 12 21 12 21z"/><circle cx="12" cy="8.4" r="2.4"/></svg></div>
       <div class="step-title">Open Stall</div>
-      <div class="step-desc">Stall instantly shows every listed store, stall, and vendor in your neighbourhood — no account needed.</div>
+      <div class="step-desc">See every nearby vendor. No account needed.</div>
     </div>
     <div class="step-card">
       <div class="step-num mono">02</div>
-      <div class="step-icon">🔍</div>
+      <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="20" y1="20" x2="15.2" y2="15.2"/></svg></div>
       <div class="step-title">Search or browse</div>
-      <div class="step-desc">Filter by category — food, tailors, flowers, repair shops, groceries. Or just scroll the map to see what's around.</div>
+      <div class="step-desc">Filter by category, or scroll the map.</div>
     </div>
     <div class="step-card">
       <div class="step-num mono">03</div>
-      <div class="step-icon">🚶</div>
+      <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="1.6"/><path d="M9.5 9.5l-1.7 4.2 3 1.8-.6 5.5"/><path d="M13.8 9.5l1.7 4.2-2 1.8 1.4 5.5"/><path d="M9.3 12.8h5.4"/></svg></div>
       <div class="step-title">Walk right in</div>
-      <div class="step-desc">Tap a listing for address, hours, phone number, and directions. No middleman, no delivery fee — just go.</div>
+      <div class="step-desc">Tap for address, hours, and directions.</div>
     </div>
   </div>
 </section>
 
 <!-- CUSTOMER BENEFITS -->
-<section class="benefits-section" id="how">
+<section class="benefits-section benefits-compact" id="how">
   <div class="section-eyebrow">Why customers love Stall</div>
-  <h2 class="section-title display">Your neighbourhood<br>has more than you think</h2>
-  <div class="benefits-grid">
+  <h2 class="section-title display">More next door<br>than you knew</h2>
+  <div class="benefits-grid benefits-grid-compact">
     <div class="benefit-card highlight">
       <div class="benefit-icon">🗺️</div>
       <div class="benefit-title">Two streets away, not two apps away</div>
-      <div class="benefit-desc">You don't need to scroll a delivery app to find what's already near you. The tailor two streets away. The chai stall that opens at 6am — right where you live.</div>
+      <div class="benefit-desc">Skip the delivery app. Find what's already near you.</div>
     </div>
     <div class="benefit-card">
       <div class="benefit-icon">⏰</div>
       <div class="benefit-title">Never walk up to a locked shutter again</div>
-      <div class="benefit-desc">Vendors update their own hours, so you always know before you leave the house. See who's open right now, not who was open last time you checked.</div>
+      <div class="benefit-desc">Vendors keep hours updated, so you know before you leave.</div>
     </div>
     <div class="benefit-card">
       <div class="benefit-icon">📞</div>
       <div class="benefit-title">Skip the app. Talk to a real person.</div>
-      <div class="benefit-desc">Call or WhatsApp the vendor directly — no platform fees, no chatbots, no waiting on hold. Just someone who actually knows what they're selling you.</div>
+      <div class="benefit-desc">Call or WhatsApp the vendor directly. No fees, no chatbots.</div>
     </div>
     <div class="benefit-card">
       <div class="benefit-icon">🏷️</div>
       <div class="benefit-title">The deal you'd have walked right past</div>
-      <div class="benefit-desc">Vendors post today's specials and limited offers on their listing, so you catch the discount before it's gone — not the day after.</div>
+      <div class="benefit-desc">Today's specials, posted live, gone when they expire.</div>
     </div>
   </div>
 </section>
 
 <!-- HOW IT WORKS — VENDOR -->
-<section class="how-section" style="background:var(--teal-light)" id="how-vendor">
+<section class="how-section how-compact" style="background:var(--teal-light)" id="how-vendor">
   <div class="section-eyebrow">For store owners and vendors</div>
-  <h2 class="section-title display">On the map in<br>under 2 minutes</h2>
-  <div class="steps-grid">
+  <h2 class="section-title display">Live in<br>under 2 minutes</h2>
+  <div class="steps-grid steps-grid-compact">
     <div class="step-card">
       <div class="step-num mono">01</div>
       <div class="step-icon">📝</div>
       <div class="step-title">Create your listing</div>
-      <div class="step-desc">Add your store name, category, address, and a short description. Your Google Business ratings sync automatically.</div>
+      <div class="step-desc">Name, category, address. Ratings sync automatically.</div>
     </div>
     <div class="step-card">
       <div class="step-num mono">02</div>
       <div class="step-icon">📸</div>
       <div class="step-title">Add photos and offers</div>
-      <div class="step-desc">Upload photos of your store or products. Post today's offer — "20% off mangoes" — visible to everyone searching nearby.</div>
+      <div class="step-desc">Upload photos. Post today's offer in seconds.</div>
     </div>
     <div class="step-card">
       <div class="step-num mono">03</div>
       <div class="step-icon">🎯</div>
       <div class="step-title">Get discovered</div>
-      <div class="step-desc">Customers within walking distance see your listing instantly. No ad spend. No algorithm. Pure local reach.</div>
+      <div class="step-desc">Nearby customers see you instantly. No ad spend.</div>
     </div>
   </div>
 </section>
 
 <!-- VENDOR BENEFITS -->
-<section class="benefits-section">
+<section class="benefits-section benefits-compact">
   <div class="section-eyebrow">Why vendors choose Stall</div>
-  <h2 class="section-title display">More customers,<br>less effort</h2>
-  <div class="benefits-grid">
+  <h2 class="section-title display">More customers.<br>Zero hustle.</h2>
+  <div class="benefits-grid benefits-grid-compact">
     <div class="benefit-card highlight">
       <div class="benefit-icon">🆓</div>
       <div class="benefit-title">Zero cost. Zero catch. Forever.</div>
-      <div class="benefit-desc">Listing your store on Stall costs nothing — no commission, no monthly fee, no cut of your sales. Your neighbours find you without you paying a rupee for it.</div>
+      <div class="benefit-desc">No commission, no monthly fee, no cut of sales.</div>
     </div>
     <div class="benefit-card">
       <div class="benefit-icon">⭐</div>
       <div class="benefit-title">Your reputation, already built in</div>
-      <div class="benefit-desc">Your Google Business rating shows up on your listing automatically and keeps itself updated. You've already earned the trust — Stall just puts it where people can see it.</div>
+      <div class="benefit-desc">Your Google rating syncs in automatically.</div>
     </div>
     <div class="benefit-card">
       <div class="benefit-icon">📣</div>
       <div class="benefit-title">Today's special, live in 10 seconds</div>
-      <div class="benefit-desc">Running a weekend deal? Post it and it's up instantly, with an expiry date — gone the moment the offer ends. Premium store partners get their offers boosted to the top of nearby searches.</div>
+      <div class="benefit-desc">Post a deal with an expiry — gone when it ends.</div>
     </div>
     <div class="benefit-card">
       <div class="benefit-icon">🤖</div>
       <div class="benefit-title">Reviews handled. You focus on the shop.</div>
-      <div class="benefit-desc">With Premium, every Google review gets a thoughtful, personalised reply — within 30 minutes for a bad review, within 2 hours for a 5-star one. Automatically. You get your time back.</div>
+      <div class="benefit-desc">Premium replies to every review for you — automatically.</div>
     </div>
   </div>
 </section>
@@ -406,16 +516,12 @@ footer { padding: 32px 5%; display: flex; align-items: center; justify-content: 
   <div class="premium-grid">
     <div>
       <div class="section-eyebrow" style="color:#6B7280">For Store Owners</div>
-      <h2 class="premium-title display">Let AI manage<br>your reputation</h2>
-      <p class="premium-sub">Every Google review — 5-star praise or 1-star complaint — gets a warm, professional, personalised response. Automatically. While you sleep.</p>
+      <h2 class="premium-title display">Your reviews,<br>on autopilot</h2>
+      <p class="premium-sub">Every review gets a warm, personalised reply. Automatically.</p>
       <div class="premium-features">
         <div class="premium-feature">
           <div class="premium-feature-icon">✓</div>
-          <div>5-star reviews get a reply within 2 hours, bad reviews within 30 minutes</div>
-        </div>
-        <div class="premium-feature">
-          <div class="premium-feature-icon">✓</div>
-          <div>AI reads your listing and writes responses specific to your business</div>
+          <div>5★ replies in 2 hours, bad reviews in 30 minutes</div>
         </div>
         <div class="premium-feature">
           <div class="premium-feature-icon">✓</div>
@@ -423,29 +529,25 @@ footer { padding: 32px 5%; display: flex; align-items: center; justify-content: 
         </div>
         <div class="premium-feature">
           <div class="premium-feature-icon">✓</div>
-          <div>Responds in English, Hindi, Kannada, Tamil, or Telugu</div>
+          <div>5 languages: English, Hindi, Kannada, Tamil, Telugu</div>
         </div>
         <div class="premium-feature">
           <div class="premium-feature-icon">✓</div>
-          <div>Override any response manually from your dashboard</div>
+          <div>Override any reply manually, anytime</div>
         </div>
         <div class="premium-feature">
           <div class="premium-feature-icon">✓</div>
-          <div>Full review log with analytics — ratings, trends, response rate</div>
-        </div>
-        <div class="premium-feature">
-          <div class="premium-feature-icon">✓</div>
-          <div>Your offers get boosted placement — seen first by customers nearby</div>
+          <div>Offers get boosted placement nearby</div>
         </div>
       </div>
     </div>
     <div>
       <div class="premium-price-card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div class="plan-head">
           <div style="font-size:12px;color:#6B7280;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.1em">Premium plan</div>
-          <div style="display:inline-flex;border:1.5px solid #374151;border-radius:7px;overflow:hidden">
-            <button class="billing-btn active" onclick="setBilling('monthly')" id="btn-monthly" style="padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:var(--teal);color:var(--white)">Monthly</button>
-            <button class="billing-btn" onclick="setBilling('annual')" id="btn-annual" style="padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:transparent;color:#9CA3AF">Annual</button>
+          <div class="billing-toggle-wrap">
+            <button class="billing-btn active" onclick="setBilling('monthly')" id="btn-monthly" style="background:var(--teal);color:var(--white)">Monthly</button>
+            <button class="billing-btn" onclick="setBilling('annual')" id="btn-annual" style="background:transparent;color:#9CA3AF">Annual</button>
           </div>
         </div>
         <div id="price-monthly" class="billing-content">
@@ -460,12 +562,12 @@ footer { padding: 32px 5%; display: flex; align-items: center; justify-content: 
         <div style="background:var(--marigold-light);border:1px solid var(--marigold);border-radius:8px;padding:10px 12px;margin-bottom:20px;font-size:12px;color:#7A4A0A;font-weight:600;text-align:center">
           🔥 Hurry — Annual price locked in for the first 100 Store Partners only
         </div>
-        <div style="border-top:1px solid #374151;padding-top:20px;margin-bottom:20px">
-          <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid #1F2937"><span style="color:#9CA3AF">Free listing</span><span style="color:#1D9E75;font-weight:600">Always included</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid #1F2937"><span style="color:#9CA3AF">Google rating sync</span><span style="color:#1D9E75;font-weight:600">Always included</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid #1F2937"><span style="color:#9CA3AF">Auto review replies</span><span style="color:#1D9E75;font-weight:600">Premium ✦</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid #1F2937"><span style="color:#9CA3AF">Review analytics</span><span style="color:#1D9E75;font-weight:600">Premium ✦</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0"><span style="color:#9CA3AF">Boosted offer placement</span><span style="color:#1D9E75;font-weight:600">Premium ✦</span></div>
+        <div style="border-top:1px solid #374151;padding-top:8px;margin-bottom:20px">
+          <div class="feature-row"><span>Free listing</span><span>Always included</span></div>
+          <div class="feature-row"><span>Google rating sync</span><span>Always included</span></div>
+          <div class="feature-row"><span>Auto review replies</span><span>Premium ✦</span></div>
+          <div class="feature-row"><span>Review analytics</span><span>Premium ✦</span></div>
+          <div class="feature-row"><span>Boosted offer placement</span><span>Premium ✦</span></div>
         </div>
         <button class="premium-cta" id="premium-cta-btn" onclick="window.open('https://jackkurian044-maker.github.io/Stall-App/','_blank')">Get Premium — ₹499/month</button>
         <div style="font-size:11px;color:#6B7280;text-align:center;margin-top:10px">First month free for early vendors</div>
@@ -477,23 +579,23 @@ footer { padding: 32px 5%; display: flex; align-items: center; justify-content: 
 <!-- TESTIMONIALS -->
 <section class="testimonials">
   <div class="section-eyebrow">From the neighbourhood</div>
-  <h2 class="section-title display">What people are saying</h2>
+  <h2 class="section-title display">Straight from the street</h2>
   <div class="testimonial-grid">
     <div class="testimonial-card">
       <div class="testimonial-stars">★★★★★</div>
-      <p class="testimonial-text">"I had no idea there was a fresh flower vendor 200 metres from my house. Found her on Stall and now I buy from her every Friday."</p>
+      <p class="testimonial-text">"Found a flower vendor 200m away. Now I buy from her every Friday."</p>
       <div class="testimonial-author">Meera R.</div>
       <div class="testimonial-role">Customer · Koramangala</div>
     </div>
     <div class="testimonial-card" style="background:var(--ink);color:var(--paper)">
       <div class="testimonial-stars">★★★★★</div>
-      <p class="testimonial-text" style="color:#9CA3AF">"Listed my pickle stall in 5 minutes. Three new customers found me within a week. They said they'd walked past my shop for months without knowing it."</p>
+      <p class="testimonial-text" style="color:#9CA3AF">"Listed my stall in 5 minutes. Three new customers within a week."</p>
       <div class="testimonial-author">Lakshmi A.</div>
       <div class="testimonial-role" style="color:#9CA3AF">Vendor · Indiranagar</div>
     </div>
     <div class="testimonial-card">
       <div class="testimonial-stars">★★★★★</div>
-      <p class="testimonial-text">"The Premium review feature is brilliant. A customer left a 2-star review at midnight and by morning it already had a polite, thoughtful response. I didn't do a thing."</p>
+      <p class="testimonial-text">"A 2-star review at midnight had a thoughtful reply by morning. I didn't do a thing."</p>
       <div class="testimonial-author">Suresh M.</div>
       <div class="testimonial-role">Premium vendor · HSR Layout</div>
     </div>
@@ -502,11 +604,11 @@ footer { padding: 32px 5%; display: flex; align-items: center; justify-content: 
 
 <!-- FINAL CTA -->
 <section class="cta-section">
-  <h2 class="cta-title display">Your neighbourhood<br>is waiting</h2>
-  <p class="cta-sub">Find stores near you, or put your store on the map — free, in 2 minutes.</p>
+  <h2 class="cta-title display">Next door<br>is calling</h2>
+  <p class="cta-sub">Free. Fast. Right around the corner.</p>
   <div class="cta-buttons">
-    <a href="https://jackkurian044-maker.github.io/Stall-App/" class="cta-primary">Find stores near me →</a>
-    <a href="https://jackkurian044-maker.github.io/Stall-App/" class="cta-secondary">List my store free</a>
+    <a href="https://jackkurian044-maker.github.io/Stall-App/" class="cta-primary">Show me what's nearby →</a>
+    <a href="https://jackkurian044-maker.github.io/Stall-App/" class="cta-secondary">Put my store on the map</a>
   </div>
 </section>
 
