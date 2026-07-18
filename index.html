@@ -35,6 +35,7 @@ nav {
   height: 60px;
 }
 .nav-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 900; letter-spacing: -0.5px; }
+.nav-logo img { height: 30px; width: auto; display: block; }
 .nav-links { display: flex; gap: 8px; align-items: center; }
 .nav-btn { padding: 8px 18px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; border: 1.5px solid var(--ink); background: transparent; color: var(--ink); transition: all .15s; white-space: nowrap; }
 .nav-btn.primary { background: var(--ink); color: var(--paper); }
@@ -228,6 +229,7 @@ nav {
 /* FOOTER */
 footer { padding: 32px 5%; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .footer-logo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 900; }
+.footer-logo img { height: 24px; width: auto; display: block; }
 .footer-copy { font-size: 12px; color: var(--muted); }
 
 /* ============ RESPONSIVE (TABLET) ============ */
@@ -240,6 +242,7 @@ footer { padding: 32px 5%; display: flex; align-items: center; justify-content: 
   /* Nav: keep it to one clear action, drop the in-page text links */
   nav { padding: 0 5%; height: 54px; }
   .nav-logo { font-size: 19px; }
+  .nav-logo img { height: 24px; }
   .nav-links { gap: 6px; }
   .nav-btn:not(.primary) { display: none; }
   .nav-btn.primary { padding: 8px 14px; font-size: 13px; }
@@ -337,7 +340,7 @@ footer { padding: 32px 5%; display: flex; align-items: center; justify-content: 
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo display">Stall</div>
+  <div class="nav-logo display"><img src="stall-logo.png" alt="Stall — That's All"></div>
   <div class="nav-links">
     <a href="#how-customer" class="nav-btn">How it works</a>
     <a href="#premium" class="nav-btn">Premium</a>
@@ -643,7 +646,7 @@ footer { padding: 32px 5%; display: flex; align-items: center; justify-content: 
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo display">Stall</div>
+  <div class="footer-logo display"><img src="stall-logo.png" alt="Stall — That's All"></div>
   <div class="footer-copy">© 2026 Stall App · Bengaluru · Built for neighbourhood commerce</div>
 </footer>
 
