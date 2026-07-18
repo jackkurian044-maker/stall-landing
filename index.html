@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stall — Your neighbourhood, mapped</title>
+<meta name="description" content="Stall helps Bengaluru's local vendors — tailors, pickle stalls, flower sellers — get discovered by nearby customers. Free to list, in 2 minutes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1A1A1A;
+  --paper: #F7F4EE;
+  --teal: #1D9E75;
+  --teal-light: #E1F5EE;
+  --marigold: #EF9F27;
+  --marigold-light: #FEF3E2;
+  --brick: #C94B2A;
+  --muted: #6B6B6B;
+  --border: #D4D0C8;
+  --white: #FFFFFF;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--paper); color: var(--ink); line-height: 1.6; }
+.display { font-family: 'Playfair Display', serif; }
+.mono { font-family: 'IBM Plex Mono', monospace; }
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--paper); border-bottom: 1.5px solid var(--ink);
+  padding: 0 5%; display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+}
+.nav-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 900; letter-spacing: -0.5px; }
+.nav-links { display: flex; gap: 8px; align-items: center; }
+.nav-btn { padding: 8px 18px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; border: 1.5px solid var(--ink); background: transparent; color: var(--ink); transition: all .15s; }
+.nav-btn.primary { background: var(--ink); color: var(--paper); }
+.nav-btn:hover { opacity: .8; }
+
+/* HERO */
+.hero {
+  padding: 80px 5% 60px;
+  border-bottom: 1.5px solid var(--ink);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+  min-height: 80vh;
+}
+.hero-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; margin-bottom: 20px; }
+.hero-title { font-family: 'Playfair Display', serif; font-size: clamp(42px, 5vw, 68px); font-weight: 900; line-height: 1.05; letter-spacing: -1px; margin-bottom: 24px; }
+.hero-title em { font-style: italic; color: var(--teal); }
+.hero-sub { font-size: 17px; color: var(--muted); line-height: 1.7; margin-bottom: 36px; max-width: 440px; }
+
+/* ROLE TOGGLE */
+.role-toggle {
+  display: inline-flex; border: 1.5px solid var(--ink); border-radius: 8px; overflow: hidden; margin-bottom: 36px;
+}
+.role-btn {
+  padding: 10px 24px; font-size: 14px; font-weight: 600; cursor: pointer;
+  border: none; background: transparent; color: var(--ink); transition: all .2s;
+}
+.role-btn.active { background: var(--ink); color: var(--paper); }
+
+.cta-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.cta-primary { padding: 13px 28px; background: var(--ink); color: var(--paper); border: none; border-radius: 7px; font-size: 15px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; transition: opacity .15s; }
+.cta-primary:hover { opacity: .85; }
+.cta-secondary { padding: 13px 24px; background: transparent; color: var(--ink); border: 1.5px solid var(--ink); border-radius: 7px; font-size: 15px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; transition: opacity .15s; }
+.cta-secondary:hover { opacity: .7; }
+
+/* HERO VISUAL */
+.hero-visual {
+  position: relative; background: var(--white);
+  border: 1.5px solid var(--ink); border-radius: 16px; overflow: hidden;
+  min-height: 420px; display: flex; flex-direction: column;
+}
+.map-placeholder {
+  flex: 1; background: linear-gradient(135deg, #E8F5F0 0%, #F0EDE6 100%);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.map-grid {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px; opacity: .5;
+}
+.map-pins { position: absolute; inset: 0; }
+.pin { position: absolute; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform .2s; }
+.pin:hover { transform: translateY(-3px); }
+.pin-dot { width: 36px; height: 36px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 2px solid var(--white); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+.pin-dot span { transform: rotate(45deg); font-size: 16px; }
+.pin-label { margin-top: 4px; font-size: 10px; font-weight: 600; background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; white-space: nowrap; color: var(--ink); }
+.map-card {
+  position: absolute; bottom: 16px; left: 16px; right: 16px;
+  background: var(--white); border: 1.5px solid var(--ink); border-radius: 10px;
+  padding: 12px 14px; display: flex; align-items: center; gap: 12px;
+}
+.map-card-icon { width: 40px; height: 40px; border-radius: 8px; background: var(--teal-light); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.map-card-title { font-size: 13px; font-weight: 700; }
+.map-card-sub { font-size: 11px; color: var(--muted); }
+.map-card-badge { margin-left: auto; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 4px; background: var(--teal-light); color: var(--teal); white-space: nowrap; }
+
+/* ROLE CONTENT SECTIONS */
+.role-content { display: none; }
+.role-content.active { display: block; }
+
+/* STATS STRIP */
+.stats-strip {
+  border-bottom: 1.5px solid var(--ink);
+  display: grid; grid-template-columns: repeat(4, 1fr);
+}
+.stat-item { padding: 32px 5%; border-right: 1.5px solid var(--ink); }
+.stat-item:last-child { border-right: none; }
+.stat-num { font-family: 'Playfair Display', serif; font-size: 40px; font-weight: 900; line-height: 1; }
+.stat-lbl { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+/* HOW IT WORKS */
+.how-section { padding: 80px 5%; border-bottom: 1.5px solid var(--ink); }
+.section-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; margin-bottom: 12px; }
+.section-title { font-family: 'Playfair Display', serif; font-size: clamp(28px, 3vw, 40px); font-weight: 900; line-height: 1.1; margin-bottom: 48px; }
+.steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1.5px solid var(--ink); border-radius: 12px; overflow: hidden; }
+.step-card { padding: 32px 28px; border-right: 1.5px solid var(--ink); background: var(--white); }
+.step-card:last-child { border-right: none; }
+.step-num { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); margin-bottom: 16px; }
+.step-icon { font-size: 32px; margin-bottom: 16px; }
+.step-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+.step-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+/* BENEFITS */
+.benefits-section { padding: 80px 5%; border-bottom: 1.5px solid var(--ink); }
+.benefits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.benefit-card { border: 1.5px solid var(--ink); border-radius: 12px; padding: 28px; background: var(--white); }
+.benefit-card.highlight { background: var(--ink); color: var(--paper); }
+.benefit-icon { font-size: 28px; margin-bottom: 14px; }
+.benefit-title { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+.benefit-desc { font-size: 14px; line-height: 1.65; }
+.benefit-card.highlight .benefit-desc { color: #B0B0B0; }
+
+/* PREMIUM SECTION */
+.premium-section { padding: 80px 5%; border-bottom: 1.5px solid var(--ink); background: var(--ink); color: var(--paper); }
+.premium-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.premium-title { font-family: 'Playfair Display', serif; font-size: clamp(28px, 3vw, 44px); font-weight: 900; line-height: 1.1; margin-bottom: 16px; }
+.premium-sub { font-size: 15px; color: #9CA3AF; line-height: 1.7; margin-bottom: 32px; }
+.premium-features { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+.premium-feature { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; }
+.premium-feature-icon { width: 24px; height: 24px; border-radius: 50%; background: var(--teal); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.premium-price-card { border: 1.5px solid #374151; border-radius: 12px; padding: 28px; }
+.premium-price { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 900; }
+.premium-price span { font-size: 18px; font-weight: 400; color: #9CA3AF; font-family: 'Inter', sans-serif; }
+.premium-cta { margin-top: 20px; width: 100%; padding: 13px; background: var(--teal); color: var(--white); border: none; border-radius: 7px; font-size: 15px; font-weight: 600; cursor: pointer; }
+
+/* TESTIMONIALS */
+.testimonials { padding: 80px 5%; border-bottom: 1.5px solid var(--ink); }
+.testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.testimonial-card { border: 1.5px solid var(--ink); border-radius: 12px; padding: 24px; background: var(--white); }
+.testimonial-stars { color: var(--marigold); font-size: 14px; margin-bottom: 12px; }
+.testimonial-text { font-size: 14px; line-height: 1.7; color: var(--ink); margin-bottom: 16px; font-style: italic; }
+.testimonial-author { font-size: 13px; font-weight: 600; }
+.testimonial-role { font-size: 12px; color: var(--muted); }
+
+/* CTA FOOTER */
+.cta-section { padding: 100px 5%; text-align: center; border-bottom: 1.5px solid var(--ink); }
+.cta-title { font-family: 'Playfair Display', serif; font-size: clamp(36px, 5vw, 60px); font-weight: 900; line-height: 1.05; margin-bottom: 20px; }
+.cta-sub { font-size: 17px; color: var(--muted); margin-bottom: 36px; }
+.cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+/* FOOTER */
+footer { padding: 32px 5%; display: flex; align-items: center; justify-content: space-between; }
+.footer-logo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 900; }
+.footer-copy { font-size: 12px; color: var(--muted); }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .hero { grid-template-columns: 1fr; min-height: auto; padding: 48px 5%; }
+  .hero-visual { min-height: 300px; }
+  .stats-strip { grid-template-columns: repeat(2, 1fr); }
+  .stat-item:nth-child(2) { border-right: none; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .step-card { border-right: none; border-bottom: 1.5px solid var(--ink); }
+  .step-card:last-child { border-bottom: none; }
+  .benefits-grid { grid-template-columns: 1fr; }
+  .premium-grid { grid-template-columns: 1fr; }
+  .testimonial-grid { grid-template-columns: 1fr; }
+  .cta-title { font-size: 32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo display">Stall</div>
+  <div class="nav-links">
+    <a href="#how" class="nav-btn">How it works</a>
+    <a href="#premium" class="nav-btn">Premium</a>
+    <a href="https://jackkurian044-maker.github.io/Stall-App/" class="nav-btn primary">Sign up / Sign in →</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow">Bengaluru's local marketplace</div>
+    <h1 class="hero-title display">
+      Every neighbourhood<br>store, <em>found.</em>
+    </h1>
+
+    <!-- ROLE TOGGLE -->
+    <div class="role-toggle">
+      <button class="role-btn active" onclick="setRole('customer')" id="btn-customer">I'm looking for stores</button>
+      <button class="role-btn" onclick="setRole('vendor')" id="btn-vendor">I own a store</button>
+    </div>
+
+    <!-- CUSTOMER CONTENT -->
+    <div class="role-content active" id="content-customer">
+      <p class="hero-sub">Discover the pickle stall two streets away, the tailor who opens at 7am, the fresh flower vendor who's there every morning. Stall maps what Google misses.</p>
+      <div class="cta-row">
+        <a href="https://jackkurian044-maker.github.io/Stall-App/" class="cta-primary">Find stores near me →</a>
+        <a href="#how-customer" class="cta-secondary">See how it works</a>
+      </div>
+    </div>
+
+    <!-- VENDOR CONTENT -->
+    <div class="role-content" id="content-vendor">
+      <p class="hero-sub">Put your store on the map in 2 minutes. Get discovered by customers walking past. Let AI respond to every Google review while you focus on your business.</p>
+      <div class="cta-row">
+        <a href="https://jackkurian044-maker.github.io/Stall-App/" class="cta-primary">List your store free →</a>
+        <a href="#premium" class="cta-secondary">See Premium features</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAP VISUAL -->
+  <div class="hero-visual">
+    <div class="map-placeholder">
+      <div class="map-grid"></div>
+      <div class="map-pins">
+        <div class="pin" style="top:20%;left:25%">
+          <div class="pin-dot" style="background:var(--teal)"><span>🥒</span></div>
+          <div class="pin-label">Amma's Pickles</div>
+        </div>
+        <div class="pin" style="top:35%;left:58%">
+          <div class="pin-dot" style="background:var(--marigold)"><span>✂️</span></div>
+          <div class="pin-label">Raju Tailor</div>
+        </div>
+        <div class="pin" style="top:55%;left:38%">
+          <div class="pin-dot" style="background:var(--brick)"><span>🌸</span></div>
+          <div class="pin-label">Flower Stall</div>
+        </div>
+        <div class="pin" style="top:18%;left:65%">
+          <div class="pin-dot" style="background:var(--ink)"><span>☕</span></div>
+          <div class="pin-label">Chai Corner</div>
+        </div>
+        <div class="pin" style="top:65%;left:62%">
+          <div class="pin-dot" style="background:var(--teal)"><span>🥬</span></div>
+          <div class="pin-label">Veg Vendor</div>
+        </div>
+      </div>
+    </div>
+    <div class="map-card">
+      <div class="map-card-icon">🥒</div>
+      <div>
+        <div class="map-card-title">Amma's Pickle Stand</div>
+        <div class="map-card-sub">Food · 180m away · Open now</div>
+      </div>
+      <div class="map-card-badge">★ 4.8</div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stat-item">
+    <div class="stat-num display">2 min</div>
+    <div class="stat-lbl">To list your store</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num display">0 ₹</div>
+    <div class="stat-lbl">To get started</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num display">24/7</div>
+    <div class="stat-lbl">Auto review responses</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num display">100%</div>
+    <div class="stat-lbl">Neighbourhood focused</div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS — CUSTOMER -->
+<section class="how-section" id="how-customer">
+  <div class="section-eyebrow">For people looking for stores</div>
+  <h2 class="section-title display">Find what's near you<br>in three taps</h2>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-num mono">01</div>
+      <div class="step-icon">📍</div>
+      <div class="step-title">Open Stall</div>
+      <div class="step-desc">Stall instantly shows every listed store, stall, and vendor in your neighbourhood — no account needed.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num mono">02</div>
+      <div class="step-icon">🔍</div>
+      <div class="step-title">Search or browse</div>
+      <div class="step-desc">Filter by category — food, tailors, flowers, repair shops, groceries. Or just scroll the map to see what's around.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num mono">03</div>
+      <div class="step-icon">🚶</div>
+      <div class="step-title">Walk right in</div>
+      <div class="step-desc">Tap a listing for address, hours, phone number, and directions. No middleman, no delivery fee — just go.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CUSTOMER BENEFITS -->
+<section class="benefits-section" id="how">
+  <div class="section-eyebrow">Why customers love Stall</div>
+  <h2 class="section-title display">Your neighbourhood<br>has more than you think</h2>
+  <div class="benefits-grid">
+    <div class="benefit-card highlight">
+      <div class="benefit-icon">🗺️</div>
+      <div class="benefit-title">Two streets away, not two apps away</div>
+      <div class="benefit-desc">You don't need to scroll a delivery app to find what's already near you. The tailor two streets away. The chai stall that opens at 6am — right where you live.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">⏰</div>
+      <div class="benefit-title">Never walk up to a locked shutter again</div>
+      <div class="benefit-desc">Vendors update their own hours, so you always know before you leave the house. See who's open right now, not who was open last time you checked.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">📞</div>
+      <div class="benefit-title">Skip the app. Talk to a real person.</div>
+      <div class="benefit-desc">Call or WhatsApp the vendor directly — no platform fees, no chatbots, no waiting on hold. Just someone who actually knows what they're selling you.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">🏷️</div>
+      <div class="benefit-title">The deal you'd have walked right past</div>
+      <div class="benefit-desc">Vendors post today's specials and limited offers on their listing, so you catch the discount before it's gone — not the day after.</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS — VENDOR -->
+<section class="how-section" style="background:var(--teal-light)" id="how-vendor">
+  <div class="section-eyebrow">For store owners and vendors</div>
+  <h2 class="section-title display">On the map in<br>under 2 minutes</h2>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-num mono">01</div>
+      <div class="step-icon">📝</div>
+      <div class="step-title">Create your listing</div>
+      <div class="step-desc">Add your store name, category, address, and a short description. Your Google Business ratings sync automatically.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num mono">02</div>
+      <div class="step-icon">📸</div>
+      <div class="step-title">Add photos and offers</div>
+      <div class="step-desc">Upload photos of your store or products. Post today's offer — "20% off mangoes" — visible to everyone searching nearby.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num mono">03</div>
+      <div class="step-icon">🎯</div>
+      <div class="step-title">Get discovered</div>
+      <div class="step-desc">Customers within walking distance see your listing instantly. No ad spend. No algorithm. Pure local reach.</div>
+    </div>
+  </div>
+</section>
+
+<!-- VENDOR BENEFITS -->
+<section class="benefits-section">
+  <div class="section-eyebrow">Why vendors choose Stall</div>
+  <h2 class="section-title display">More customers,<br>less effort</h2>
+  <div class="benefits-grid">
+    <div class="benefit-card highlight">
+      <div class="benefit-icon">🆓</div>
+      <div class="benefit-title">Zero cost. Zero catch. Forever.</div>
+      <div class="benefit-desc">Listing your store on Stall costs nothing — no commission, no monthly fee, no cut of your sales. Your neighbours find you without you paying a rupee for it.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">⭐</div>
+      <div class="benefit-title">Your reputation, already built in</div>
+      <div class="benefit-desc">Your Google Business rating shows up on your listing automatically and keeps itself updated. You've already earned the trust — Stall just puts it where people can see it.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">📣</div>
+      <div class="benefit-title">Today's special, live in 10 seconds</div>
+      <div class="benefit-desc">Running a weekend deal? Post it and it's up instantly, with an expiry date — gone the moment the offer ends. Premium store partners get their offers boosted to the top of nearby searches.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">🤖</div>
+      <div class="benefit-title">Reviews handled. You focus on the shop.</div>
+      <div class="benefit-desc">With Premium, every Google review gets a thoughtful, personalised reply — within 30 minutes for a bad review, within 2 hours for a 5-star one. Automatically. You get your time back.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PREMIUM -->
+<section class="premium-section" id="premium">
+  <div class="premium-grid">
+    <div>
+      <div class="section-eyebrow" style="color:#6B7280">For Store Owners</div>
+      <h2 class="premium-title display">Let AI manage<br>your reputation</h2>
+      <p class="premium-sub">Every Google review — 5-star praise or 1-star complaint — gets a warm, professional, personalised response. Automatically. While you sleep.</p>
+      <div class="premium-features">
+        <div class="premium-feature">
+          <div class="premium-feature-icon">✓</div>
+          <div>5-star reviews get a reply within 2 hours, bad reviews within 30 minutes</div>
+        </div>
+        <div class="premium-feature">
+          <div class="premium-feature-icon">✓</div>
+          <div>AI reads your listing and writes responses specific to your business</div>
+        </div>
+        <div class="premium-feature">
+          <div class="premium-feature-icon">✓</div>
+          <div>Tone adapts — grateful for 5★, empathetic for 1★</div>
+        </div>
+        <div class="premium-feature">
+          <div class="premium-feature-icon">✓</div>
+          <div>Responds in English, Hindi, Kannada, Tamil, or Telugu</div>
+        </div>
+        <div class="premium-feature">
+          <div class="premium-feature-icon">✓</div>
+          <div>Override any response manually from your dashboard</div>
+        </div>
+        <div class="premium-feature">
+          <div class="premium-feature-icon">✓</div>
+          <div>Full review log with analytics — ratings, trends, response rate</div>
+        </div>
+        <div class="premium-feature">
+          <div class="premium-feature-icon">✓</div>
+          <div>Your offers get boosted placement — seen first by customers nearby</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="premium-price-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div style="font-size:12px;color:#6B7280;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.1em">Premium plan</div>
+          <div style="display:inline-flex;border:1.5px solid #374151;border-radius:7px;overflow:hidden">
+            <button class="billing-btn active" onclick="setBilling('monthly')" id="btn-monthly" style="padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:var(--teal);color:var(--white)">Monthly</button>
+            <button class="billing-btn" onclick="setBilling('annual')" id="btn-annual" style="padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:transparent;color:#9CA3AF">Annual</button>
+          </div>
+        </div>
+        <div id="price-monthly" class="billing-content">
+          <div class="premium-price display">₹499 <span>/ month</span></div>
+          <div style="font-size:13px;color:#6B7280;margin-top:8px;margin-bottom:24px">Cancel anytime · Billed via Razorpay · UPI, cards, netbanking</div>
+        </div>
+        <div id="price-annual" class="billing-content" style="display:none">
+          <div class="premium-price display">₹4,999 <span>/ year</span></div>
+          <div style="font-size:13px;margin-top:8px;margin-bottom:4px"><span style="color:#9CA3AF;text-decoration:line-through">₹5,988</span> <span style="color:var(--teal);font-weight:600">Save ₹989</span> · just ₹416/month</div>
+          <div style="font-size:13px;color:#6B7280;margin-bottom:24px">Billed via Razorpay · UPI, cards, netbanking</div>
+        </div>
+        <div style="background:var(--marigold-light);border:1px solid var(--marigold);border-radius:8px;padding:10px 12px;margin-bottom:20px;font-size:12px;color:#7A4A0A;font-weight:600;text-align:center">
+          🔥 Hurry — Annual price locked in for the first 100 Store Partners only
+        </div>
+        <div style="border-top:1px solid #374151;padding-top:20px;margin-bottom:20px">
+          <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid #1F2937"><span style="color:#9CA3AF">Free listing</span><span style="color:#1D9E75;font-weight:600">Always included</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid #1F2937"><span style="color:#9CA3AF">Google rating sync</span><span style="color:#1D9E75;font-weight:600">Always included</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid #1F2937"><span style="color:#9CA3AF">Auto review replies</span><span style="color:#1D9E75;font-weight:600">Premium ✦</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid #1F2937"><span style="color:#9CA3AF">Review analytics</span><span style="color:#1D9E75;font-weight:600">Premium ✦</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0"><span style="color:#9CA3AF">Boosted offer placement</span><span style="color:#1D9E75;font-weight:600">Premium ✦</span></div>
+        </div>
+        <button class="premium-cta" id="premium-cta-btn" onclick="window.open('https://jackkurian044-maker.github.io/Stall-App/','_blank')">Get Premium — ₹499/month</button>
+        <div style="font-size:11px;color:#6B7280;text-align:center;margin-top:10px">First month free for early vendors</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="section-eyebrow">From the neighbourhood</div>
+  <h2 class="section-title display">What people are saying</h2>
+  <div class="testimonial-grid">
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"I had no idea there was a fresh flower vendor 200 metres from my house. Found her on Stall and now I buy from her every Friday."</p>
+      <div class="testimonial-author">Meera R.</div>
+      <div class="testimonial-role">Customer · Koramangala</div>
+    </div>
+    <div class="testimonial-card" style="background:var(--ink);color:var(--paper)">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text" style="color:#9CA3AF">"Listed my pickle stall in 5 minutes. Three new customers found me within a week. They said they'd walked past my shop for months without knowing it."</p>
+      <div class="testimonial-author">Lakshmi A.</div>
+      <div class="testimonial-role" style="color:#9CA3AF">Vendor · Indiranagar</div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"The Premium review feature is brilliant. A customer left a 2-star review at midnight and by morning it already had a polite, thoughtful response. I didn't do a thing."</p>
+      <div class="testimonial-author">Suresh M.</div>
+      <div class="testimonial-role">Premium vendor · HSR Layout</div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta-section">
+  <h2 class="cta-title display">Your neighbourhood<br>is waiting</h2>
+  <p class="cta-sub">Find stores near you, or put your store on the map — free, in 2 minutes.</p>
+  <div class="cta-buttons">
+    <a href="https://jackkurian044-maker.github.io/Stall-App/" class="cta-primary">Find stores near me →</a>
+    <a href="https://jackkurian044-maker.github.io/Stall-App/" class="cta-secondary">List my store free</a>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo display">Stall</div>
+  <div class="footer-copy">© 2026 Stall App · Bengaluru · Built for neighbourhood commerce</div>
+</footer>
+
+<script>
+function setBilling(plan) {
+  document.getElementById('btn-monthly').style.background = plan === 'monthly' ? 'var(--teal)' : 'transparent';
+  document.getElementById('btn-monthly').style.color = plan === 'monthly' ? 'var(--white)' : '#9CA3AF';
+  document.getElementById('btn-annual').style.background = plan === 'annual' ? 'var(--teal)' : 'transparent';
+  document.getElementById('btn-annual').style.color = plan === 'annual' ? 'var(--white)' : '#9CA3AF';
+  document.getElementById('price-monthly').style.display = plan === 'monthly' ? 'block' : 'none';
+  document.getElementById('price-annual').style.display = plan === 'annual' ? 'block' : 'none';
+  document.getElementById('premium-cta-btn').textContent = plan === 'monthly' ? 'Get Premium — ₹499/month' : 'Get Premium — ₹4,999/year';
+}
+
+function setRole(role) {
+  document.getElementById('btn-customer').classList.toggle('active', role === 'customer');
+  document.getElementById('btn-vendor').classList.toggle('active', role === 'vendor');
+  document.getElementById('content-customer').classList.toggle('active', role === 'customer');
+  document.getElementById('content-vendor').classList.toggle('active', role === 'vendor');
+  if (role === 'vendor') {
+    setTimeout(() => document.getElementById('how-vendor').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+  }
+}
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+</script>
+</body>
+</html>
