@@ -140,6 +140,38 @@ nav {
 .benefits-compact { padding: 28px 5%; }
 .benefits-compact .section-eyebrow { margin-bottom: 6px; }
 .benefits-compact .section-title { font-size: clamp(17px, 2vw, 22px); margin-bottom: 16px; }
+.eyebrow-customer { color: var(--brick) !important; }
+.eyebrow-vendor { color: var(--teal) !important; }
+.track-divider {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 14px 5%; background: var(--ink); color: var(--paper);
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .12em; text-align: center;
+  border-bottom: 1.5px solid var(--ink);
+}
+.track-divider .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+
+/* Sticky auto-scrolling "why customers love Stall" ticker, pinned below nav */
+.love-ticker {
+  position: sticky; top: 60px; z-index: 90;
+  display: flex; align-items: center;
+  background: var(--marigold-light); border-bottom: 1.5px solid var(--ink);
+  overflow: hidden;
+}
+.love-ticker-label {
+  flex-shrink: 0; padding: 8px 16px; border-right: 1.5px solid var(--ink);
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .08em; color: var(--brick);
+  white-space: nowrap; background: var(--marigold-light);
+}
+.love-ticker-viewport { flex: 1; overflow: hidden; white-space: nowrap; }
+.love-ticker-track { display: inline-flex; gap: 36px; padding-left: 36px; animation: love-ticker-scroll 24s linear infinite; }
+.love-item { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: var(--ink); white-space: nowrap; }
+.love-item-icon { font-size: 14px; }
+@keyframes love-ticker-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
 .benefits-grid-compact { gap: 10px; }
 .benefits-grid-compact .benefit-card { padding: 14px 16px; }
 .benefits-grid-compact .benefit-icon { font-size: 18px; margin-bottom: 6px; }
@@ -259,6 +291,9 @@ footer { padding: 32px 5%; display: flex; align-items: center; justify-content: 
   .benefits-grid { grid-template-columns: 1fr; gap: 12px; }
   .benefit-card { padding: 20px; }
   .benefits-grid-compact .benefit-card { padding: 12px 14px; }
+  .love-ticker { top: 54px; }
+  .love-ticker-label { padding: 7px 12px; font-size: 10px; }
+  .love-item { font-size: 11.5px; }
   .benefit-icon { font-size: 24px; margin-bottom: 10px; }
   .benefit-title { font-size: 15px; }
   .benefit-desc { font-size: 13px; }
@@ -304,11 +339,27 @@ footer { padding: 32px 5%; display: flex; align-items: center; justify-content: 
 <nav>
   <div class="nav-logo display">Stall</div>
   <div class="nav-links">
-    <a href="#how" class="nav-btn">How it works</a>
+    <a href="#how-customer" class="nav-btn">How it works</a>
     <a href="#premium" class="nav-btn">Premium</a>
     <a href="https://jackkurian044-maker.github.io/Stall-App/" class="nav-btn primary">Sign up / Sign in →</a>
   </div>
 </nav>
+
+<div class="love-ticker">
+  <div class="love-ticker-label">Why customers love Stall</div>
+  <div class="love-ticker-viewport">
+    <div class="love-ticker-track">
+      <span class="love-item"><span class="love-item-icon">🗺️</span>Two streets away, not two apps away</span>
+      <span class="love-item"><span class="love-item-icon">⏰</span>Never walk up to a locked shutter again</span>
+      <span class="love-item"><span class="love-item-icon">📞</span>Skip the app. Talk to a real person.</span>
+      <span class="love-item"><span class="love-item-icon">🏷️</span>Catch the deal before it's gone</span>
+      <span class="love-item"><span class="love-item-icon">🗺️</span>Two streets away, not two apps away</span>
+      <span class="love-item"><span class="love-item-icon">⏰</span>Never walk up to a locked shutter again</span>
+      <span class="love-item"><span class="love-item-icon">📞</span>Skip the app. Talk to a real person.</span>
+      <span class="love-item"><span class="love-item-icon">🏷️</span>Catch the deal before it's gone</span>
+    </div>
+  </div>
+</div>
 
 <main>
 
@@ -404,8 +455,8 @@ footer { padding: 32px 5%; display: flex; align-items: center; justify-content: 
 </div>
 
 <!-- HOW IT WORKS — CUSTOMER -->
-<section class="how-section how-compact" id="how-customer">
-  <div class="section-eyebrow">For people looking for stores</div>
+<section class="how-section how-compact" style="background:var(--marigold-light)" id="how-customer">
+  <div class="section-eyebrow eyebrow-customer">For people looking for stores</div>
   <h2 class="section-title display">Three taps.<br>Whole neighbourhood.</h2>
   <div class="steps-grid steps-grid-compact">
     <div class="step-card">
@@ -429,37 +480,11 @@ footer { padding: 32px 5%; display: flex; align-items: center; justify-content: 
   </div>
 </section>
 
-<!-- CUSTOMER BENEFITS -->
-<section class="benefits-section benefits-compact" id="how">
-  <div class="section-eyebrow">Why customers love Stall</div>
-  <h2 class="section-title display">More next door<br>than you knew</h2>
-  <div class="benefits-grid benefits-grid-compact">
-    <div class="benefit-card highlight">
-      <div class="benefit-icon">🗺️</div>
-      <div class="benefit-title">Two streets away, not two apps away</div>
-      <div class="benefit-desc">Skip the delivery app. Find what's already near you.</div>
-    </div>
-    <div class="benefit-card">
-      <div class="benefit-icon">⏰</div>
-      <div class="benefit-title">Never walk up to a locked shutter again</div>
-      <div class="benefit-desc">Vendors keep hours updated, so you know before you leave.</div>
-    </div>
-    <div class="benefit-card">
-      <div class="benefit-icon">📞</div>
-      <div class="benefit-title">Skip the app. Talk to a real person.</div>
-      <div class="benefit-desc">Call or WhatsApp the vendor directly. No fees, no chatbots.</div>
-    </div>
-    <div class="benefit-card">
-      <div class="benefit-icon">🏷️</div>
-      <div class="benefit-title">The deal you'd have walked right past</div>
-      <div class="benefit-desc">Today's specials, posted live, gone when they expire.</div>
-    </div>
-  </div>
-</section>
-
 <!-- HOW IT WORKS — VENDOR -->
+<div class="track-divider"><span class="dot"></span>Now, for store owners<span class="dot"></span></div>
+
 <section class="how-section how-compact" style="background:var(--teal-light)" id="how-vendor">
-  <div class="section-eyebrow">For store owners and vendors</div>
+  <div class="section-eyebrow eyebrow-vendor">For store owners and vendors</div>
   <h2 class="section-title display">Live in<br>under 2 minutes</h2>
   <div class="steps-grid steps-grid-compact">
     <div class="step-card">
@@ -484,8 +509,8 @@ footer { padding: 32px 5%; display: flex; align-items: center; justify-content: 
 </section>
 
 <!-- VENDOR BENEFITS -->
-<section class="benefits-section benefits-compact">
-  <div class="section-eyebrow">Why vendors choose Stall</div>
+<section class="benefits-section benefits-compact" style="background:var(--teal-light)">
+  <div class="section-eyebrow eyebrow-vendor">Why vendors choose Stall</div>
   <h2 class="section-title display">More customers.<br>Zero hustle.</h2>
   <div class="benefits-grid benefits-grid-compact">
     <div class="benefit-card highlight">
