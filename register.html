@@ -685,7 +685,14 @@ document.getElementById('reg-form').addEventListener('submit', (e) => {
   that happens to be.
 -->
 <script async defer
-  src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initGoogleMaps">
+  src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initGoogleMaps&loading=async">
 </script>
+<!--
+  ^^^ REPLACE YOUR_GOOGLE_MAPS_API_KEY ABOVE WITH YOUR REAL KEY. ^^^
+  Right now this is the literal placeholder string, which is why the
+  console shows "InvalidKeyMapError" and location/autocomplete don't work.
+  Get a key at console.cloud.google.com → APIs & Services → Credentials,
+  enable Places API + Geocoding API, and restrict it to your domain(s).
+-->
 </body>
 </html>
