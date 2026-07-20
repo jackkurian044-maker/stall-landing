@@ -16,7 +16,7 @@
     --green: #2f9e44;
   }
   *{box-sizing:border-box;}
-  html,body{margin:0;padding:0; scroll-behavior:smooth;}
+  html,body{margin:0;padding:0; scroll-behavior:smooth; max-width:100%; overflow-x:hidden;}
   body{font-family: Georgia, 'Times New Roman', serif; background: var(--navy); color: #fff; overflow-x:hidden;}
   .sans{font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;}
   img{display:block; max-width:100%;}
@@ -163,7 +163,7 @@
   .vendor-tile .rating{position:absolute; top:10px; left:10px; background:rgba(253,249,239,0.95); color:var(--ink); font-family:-apple-system,sans-serif; font-size:0.7rem; font-weight:700; padding:4px 8px; border-radius:20px;}
 
   /* SCROLLING CAROUSEL */
-  .carousel-section{padding: 60px 0; background: var(--navy-2); margin: 0 -40px;}
+  .carousel-section{padding: 60px 0; background: var(--navy-2); margin: 0 -40px; overflow:hidden; width:100vw; max-width:100%;}
   .carousel-section h3{text-align:center; font-size:1.6rem; margin: 0 0 30px; font-family:Georgia,serif;}
   .carousel-track{display:flex; gap:20px; width:max-content; animation: scrollLeft 30s linear infinite; padding: 0 40px;}
   .carousel-track:hover{animation-play-state: paused;}
@@ -322,19 +322,19 @@
 <section class="carousel-section">
   <h3>More from the neighbourhood</h3>
   <div class="carousel-track">
-    <div class="carousel-card"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&q=80" alt=""><div class="cap">Spice Merchant</div></div>
-    <div class="carousel-card"><img src="https://images.unsplash.com/photo-1506484381205-f7945653044d?w=400&q=80" alt=""><div class="cap">Corner Bakery</div></div>
-    <div class="carousel-card"><img src="https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?w=400&q=80" alt=""><div class="cap">Fruit Cart</div></div>
-    <div class="carousel-card"><img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=400&q=80" alt=""><div class="cap">Local Bookstall</div></div>
-    <div class="carousel-card"><img src="https://images.unsplash.com/photo-1583744946564-b52ac1c389c8?w=400&q=80" alt=""><div class="cap">Street Snacks</div></div>
-    <div class="carousel-card"><img src="https://images.unsplash.com/photo-1580913428023-02c429014349?w=400&q=80" alt=""><div class="cap">Hardware Store</div></div>
+    <div class="carousel-card"><img src="https://picsum.photos/seed/stall-spice/440/560" alt=""><div class="cap">Spice Merchant</div></div>
+    <div class="carousel-card"><img src="https://picsum.photos/seed/stall-bakery/440/560" alt=""><div class="cap">Corner Bakery</div></div>
+    <div class="carousel-card"><img src="https://picsum.photos/seed/stall-fruit/440/560" alt=""><div class="cap">Fruit Cart</div></div>
+    <div class="carousel-card"><img src="https://picsum.photos/seed/stall-books/440/560" alt=""><div class="cap">Local Bookstall</div></div>
+    <div class="carousel-card"><img src="https://picsum.photos/seed/stall-snacks/440/560" alt=""><div class="cap">Street Snacks</div></div>
+    <div class="carousel-card"><img src="https://picsum.photos/seed/stall-hardware/440/560" alt=""><div class="cap">Hardware Store</div></div>
     <!-- duplicate set for seamless loop -->
-    <div class="carousel-card"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&q=80" alt=""><div class="cap">Spice Merchant</div></div>
-    <div class="carousel-card"><img src="https://images.unsplash.com/photo-1506484381205-f7945653044d?w=400&q=80" alt=""><div class="cap">Corner Bakery</div></div>
-    <div class="carousel-card"><img src="https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?w=400&q=80" alt=""><div class="cap">Fruit Cart</div></div>
-    <div class="carousel-card"><img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=400&q=80" alt=""><div class="cap">Local Bookstall</div></div>
-    <div class="carousel-card"><img src="https://images.unsplash.com/photo-1583744946564-b52ac1c389c8?w=400&q=80" alt=""><div class="cap">Street Snacks</div></div>
-    <div class="carousel-card"><img src="https://images.unsplash.com/photo-1580913428023-02c429014349?w=400&q=80" alt=""><div class="cap">Hardware Store</div></div>
+    <div class="carousel-card"><img src="https://picsum.photos/seed/stall-spice/440/560" alt=""><div class="cap">Spice Merchant</div></div>
+    <div class="carousel-card"><img src="https://picsum.photos/seed/stall-bakery/440/560" alt=""><div class="cap">Corner Bakery</div></div>
+    <div class="carousel-card"><img src="https://picsum.photos/seed/stall-fruit/440/560" alt=""><div class="cap">Fruit Cart</div></div>
+    <div class="carousel-card"><img src="https://picsum.photos/seed/stall-books/440/560" alt=""><div class="cap">Local Bookstall</div></div>
+    <div class="carousel-card"><img src="https://picsum.photos/seed/stall-snacks/440/560" alt=""><div class="cap">Street Snacks</div></div>
+    <div class="carousel-card"><img src="https://picsum.photos/seed/stall-hardware/440/560" alt=""><div class="cap">Hardware Store</div></div>
   </div>
 </section>
 
