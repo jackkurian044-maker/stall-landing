@@ -724,6 +724,9 @@ document.getElementById('reg-form').addEventListener('submit', async (e) => {
       // in the dashboard's "Claim a listing" flow — same as admin-added listings.
       ownerId: null,
       claimCode,
+      // Not visible on the public Find page until an admin approves it —
+      // see the "Pending Approvals" tab in VendorDashboard.jsx.
+      status: 'pending',
       // Lets you tell self-registered vendors apart from admin-added ones,
       // e.g. where("source", "==", "direct-registration") for a count.
       source: 'direct-registration',
