@@ -148,9 +148,14 @@ textarea{resize:vertical;min-height:80px;}
 
 <div class="wrap">
   <div>
-    <div class="head-eyebrow">Free, forever · No commission</div>
-    <h1 class="serif">List your store on Stall</h1>
-    <p class="sub">Takes about 2 minutes. Your neighbours are already looking for you.</p>
+    <div class="premium-banner" id="premium-banner" style="display:none;align-items:center;gap:10px;background:rgba(243,183,61,0.12);border:1.5px solid var(--gold);border-radius:12px;padding:12px 16px;margin-bottom:20px;">
+      <span style="font-size:1.2rem;">✦</span>
+      <span style="font-size:0.85rem;color:#fff;">You're on the fast track to <strong style="color:var(--gold);">Premium</strong> — list your store first, then we'll get you set up on the ₹499/month plan.</span>
+    </div>
+
+    <div class="head-eyebrow" id="head-eyebrow">Free, forever · No commission</div>
+    <h1 class="serif" id="page-h1">List your store on Stall</h1>
+    <p class="sub" id="page-sub">Takes about 2 minutes. Your neighbours are already looking for you.</p>
 
     <div class="steps">
       <div class="step-dot done" id="dot-1"></div>
@@ -413,6 +418,23 @@ window.__stallFirebase = {
 // #store-address field alone is not reliable enough for "nearby customers"
 // matching (typos, missing pin codes, etc).
 // ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// PREMIUM INTENT — set when arriving from the "Get Premium" button on the
+// landing page (index.html links to register.html?plan=premium). Vendors
+// always register first; this just carries their intent through the form
+// so we (a) tell them what's coming next and (b) tag the listing so it
+// shows up as a premium lead in the admin/vendor dashboard for follow-up
+// on billing (no live Razorpay flow wired into this static form yet).
+// ---------------------------------------------------------------------------
+const wantsPremium = new URLSearchParams(window.location.search).get('plan') === 'premium';
+if (wantsPremium) {
+  document.getElementById('premium-banner').style.display = 'flex';
+  document.getElementById('head-eyebrow').textContent = 'Step 1 of 2 · Premium sign-up';
+  document.getElementById('page-h1').textContent = 'First, list your store';
+  document.getElementById('page-sub').textContent = "Every Premium vendor starts with a free listing. Finish this, and we'll take you straight into Premium activation.";
+  document.getElementById('submit-btn').textContent = 'List my store — continue to Premium →';
+}
 
 let geoAutocomplete = null;
 let geocoder = null;
@@ -730,12 +752,56 @@ document.getElementById('reg-form').addEventListener('submit', async (e) => {
       // Lets you tell self-registered vendors apart from admin-added ones,
       // e.g. where("source", "==", "direct-registration") for a count.
       source: 'direct-registration',
+      // 'premium' when the vendor arrived via the "Get Premium" CTA
+      // (register.html?plan=premium) — surfaces these as premium leads to
+      // follow up on billing, e.g. where("planRequested", "==", "premium").
+      planRequested: wantsPremium ? 'premium' : 'free',
       createdAt: serverTimestamp(),
     });
 
-    btn.textContent = '✓ Store listed!';
-    if (submitNote) {
-      submitNote.innerHTML = `Save your claim code to manage this listing later: <strong style="color:var(--gold);letter-spacing:0.05em;">${claimCode}</strong>`;
+    if (wantsPremium) {
+      btn.textContent = '✓ Store listed — Premium next';
+      btn.style.display = 'none';
+      const premiumNext = document.createElement('div');
+      premiumNext.style.cssText = 'background:var(--navy-2);border:1.5px solid var(--gold);border-radius:14px;padding:22px;margin-top:22px;text-align:center;';
+      premiumNext.innerHTML = `
+        <div style="font-size:1.5rem;margin-bottom:8px;">✦</div>
+        <div style="font-weight:700;margin-bottom:6px;">Your store is listed!</div>
+        <div style="font-size:0.88rem;color:var(--muted);margin-bottom:6px;">Save your claim code: <strong style="color:var(--gold);letter-spacing:0.05em;">${claimCode}</strong></div>
+        <div style="font-size:0.85rem;color:var(--muted);margin-bottom:18px;">Next, let's get Premium turned on — auto review replies, analytics, and boosted placement.</div>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+          <div id="razorpay-monthly" style="flex:1;min-width:180px;"></div>
+          <div id="razorpay-annual" style="flex:1;min-width:180px;"></div>
+        </div>
+      `;
+      btn.insertAdjacentElement('afterend', premiumNext);
+      if (submitNote) submitNote.style.display = 'none';
+
+      // -----------------------------------------------------------------
+      // RAZORPAY PAYMENT BUTTONS — script tags set via innerHTML never
+      // execute, so each button is built with real DOM calls instead.
+      // Create these in Razorpay Dashboard → Payment Pages → Payment
+      // Buttons (use a Subscription-type button for true auto-recurring
+      // billing). Swap in your real button IDs below — these are public
+      // identifiers, safe to embed client-side (no secret key involved).
+      // -----------------------------------------------------------------
+      function mountRazorpayButton(containerId, buttonId) {
+        const container = document.getElementById(containerId);
+        const form = document.createElement('form');
+        const script = document.createElement('script');
+        script.src = 'https://checkout.razorpay.com/v1/payment-button.js';
+        script.setAttribute('data-payment_button_id', buttonId);
+        script.async = true;
+        form.appendChild(script);
+        container.appendChild(form);
+      }
+      mountRazorpayButton('razorpay-monthly', 'REPLACE_WITH_MONTHLY_PAYMENT_BUTTON_ID');
+      mountRazorpayButton('razorpay-annual', 'REPLACE_WITH_ANNUAL_PAYMENT_BUTTON_ID');
+    } else {
+      btn.textContent = '✓ Store listed!';
+      if (submitNote) {
+        submitNote.innerHTML = `Save your claim code to manage this listing later: <strong style="color:var(--gold);letter-spacing:0.05em;">${claimCode}</strong>`;
+      }
     }
   } catch (err) {
     console.error('Vendor registration failed:', err);
