@@ -375,53 +375,6 @@
     .cta-band{flex-direction:column;align-items:flex-start;}
   }
 
-/* ==== Mobile Navbar + Footer Fix ==== */
-html,body{
-  margin:0!important;
-  padding:0!important;
-  overflow-x:hidden!important;
-}
-body{min-height:auto!important;}
-main,section:last-of-type{
-  margin-bottom:0!important;
-  padding-bottom:0!important;
-}
-footer{
-  margin:0!important;
-  padding-bottom:env(safe-area-inset-bottom,0)!important;
-}
-body>*:last-child{margin-bottom:0!important;}
-
-@media (max-width:768px){
-  .nav-links,
-  .nav-buttons{display:none!important;}
-  .mobile-menu-btn,
-  .hamburger{display:flex!important;}
-  .mobile-menu.active{
-      display:flex!important;
-      flex-direction:column!important;
-      gap:16px!important;
-      position:fixed!important;
-      top:70px!important;
-      left:0;
-      right:0;
-      background:#111;
-      z-index:9999;
-      padding:20px;
-      max-height:calc(100vh - 70px);
-      overflow:auto;
-  }
-  .mobile-menu.active .nav-buttons{
-      display:flex!important;
-      flex-direction:column!important;
-      width:100%;
-  }
-  .mobile-menu.active .btn{
-      width:100%!important;
-  }
-}
-
-
 @media (max-width:768px){
 .logo{
     display:flex!important;
