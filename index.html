@@ -161,6 +161,27 @@
   }
   .loc-chip:hover{border-color:var(--gold-dim);color:var(--gold-light);}
   .loc-chip .icon{color:var(--gold);}
+  .loc-chip{cursor:pointer;}
+  .loc-chip:disabled{opacity:.6;cursor:wait;}
+  .loc-chip.is-active{border-color:var(--gold);color:var(--gold-light);}
+  .loc-chip-wrap{position:relative;}
+  .loc-status{margin-top:10px;font-size:.8rem;color:var(--gray-dim);min-height:1.1em;}
+  .loc-status.is-error{color:#e77;}
+  .loc-popover{
+    position:absolute;top:calc(100% + 10px);left:0;z-index:30;
+    background:var(--bg-alt);border:1px solid var(--border);border-radius:12px;
+    padding:16px;width:240px;box-shadow:0 12px 30px rgba(0,0,0,.5);
+  }
+  .loc-popover[hidden]{display:none;}
+  .loc-popover-title{font-size:.82rem;font-weight:600;color:var(--white);margin-bottom:10px;}
+  .loc-popover-row{display:flex;gap:8px;margin-bottom:10px;}
+  .loc-popover-row input{
+    width:100%;background:#1a1a1a;border:1px solid var(--border);border-radius:7px;
+    padding:8px 9px;color:var(--white);font-size:.82rem;
+  }
+  .loc-popover-row input:focus{outline:none;border-color:var(--gold-dim);}
+  .loc-popover-go{width:100%;justify-content:center;padding:9px;}
+  .loc-popover-hint{margin-top:8px;font-size:.7rem;color:var(--gray-dim);line-height:1.4;}
 
   .hero-visual{
     position:relative;display:flex;align-items:center;justify-content:center;
@@ -463,15 +484,31 @@
 <div>
 <h1>Discover every <span class="accent">local business</span> around you.</h1>
 <p class="sub">Find, connect &amp; support businesses in your neighbourhood.</p>
-<form action="https://stallapp.cutncutestudio.in/" class="search-bar" method="get" role="search">
+<form action="https://stallapp.cutncutestudio.in/" class="search-bar" id="stall-search-form" method="get" role="search">
 <label class="sr-only" for="q" style="position:absolute;left:-9999px;">Search</label>
 <input id="q" name="q" placeholder="Search businesses, products or services..." type="text"/>
+<input id="lat-field" name="lat" type="hidden"/>
+<input id="lng-field" name="lng" type="hidden"/>
 <button type="submit"><svg class="icon"><use href="#i-search"></use></svg> Search</button>
 </form>
 <div class="loc-row">
-<button class="loc-chip"><svg class="icon"><use href="#i-pin"></use></svg> Use Current Location</button>
-<button class="loc-chip"><svg class="icon"><use href="#i-crosshair"></use></svg> Choose Location</button>
+<div class="loc-chip-wrap">
+<button class="loc-chip" id="use-location-btn" type="button"><svg class="icon"><use href="#i-pin"></use></svg><span>Use Current Location</span></button>
 </div>
+<div class="loc-chip-wrap">
+<button aria-controls="choose-location-popover" aria-expanded="false" class="loc-chip" id="choose-location-btn" type="button"><svg class="icon"><use href="#i-crosshair"></use></svg><span>Choose Location</span></button>
+<div class="loc-popover" hidden="" id="choose-location-popover">
+<p class="loc-popover-title">Enter coordinates</p>
+<div class="loc-popover-row">
+<input aria-label="Latitude" id="manual-lat" placeholder="Latitude" step="any" type="number"/>
+<input aria-label="Longitude" id="manual-lng" placeholder="Longitude" step="any" type="number"/>
+</div>
+<button class="btn btn-gold loc-popover-go" id="manual-loc-go" type="button">Go</button>
+<p class="loc-popover-hint">Tip: search "my coordinates" on Google Maps to find these.</p>
+</div>
+</div>
+</div>
+<p aria-live="polite" class="loc-status" id="loc-status"></p>
 </div>
 <div class="hero-visual">
 <svg class="icon pin p1"><use href="#i-pin"></use></svg>
@@ -674,5 +711,109 @@
 </div>
 </div>
 </footer>
+<script>
+(function(){
+  var form = document.getElementById('stall-search-form');
+  var qField = document.getElementById('q');
+  var latField = document.getElementById('lat-field');
+  var lngField = document.getElementById('lng-field');
+  var statusEl = document.getElementById('loc-status');
+  var useLocBtn = document.getElementById('use-location-btn');
+  var chooseLocBtn = document.getElementById('choose-location-btn');
+  var popover = document.getElementById('choose-location-popover');
+  var manualLat = document.getElementById('manual-lat');
+  var manualLng = document.getElementById('manual-lng');
+  var manualGo = document.getElementById('manual-loc-go');
+
+  function setStatus(msg, isError){
+    statusEl.textContent = msg || '';
+    statusEl.classList.toggle('is-error', !!isError);
+  }
+
+  function chipLabel(btn, text){
+    var span = btn.querySelector('span');
+    if (span) span.textContent = text;
+  }
+
+  function goWithLocation(lat, lng){
+    latField.value = lat;
+    lngField.value = lng;
+    form.submit();
+  }
+
+  // --- Use Current Location ---
+  useLocBtn.addEventListener('click', function(){
+    if (!navigator.geolocation){
+      setStatus("Your browser doesn't support location — try Choose Location instead.", true);
+      return;
+    }
+    popover.hidden = true;
+    chooseLocBtn.setAttribute('aria-expanded', 'false');
+    useLocBtn.disabled = true;
+    chipLabel(useLocBtn, 'Locating…');
+    setStatus('Requesting your location…');
+    navigator.geolocation.getCurrentPosition(
+      function(pos){
+        useLocBtn.disabled = false;
+        useLocBtn.classList.add('is-active');
+        chipLabel(useLocBtn, 'Location set');
+        setStatus('Location found — taking you to nearby businesses…');
+        goWithLocation(pos.coords.latitude, pos.coords.longitude);
+      },
+      function(err){
+        useLocBtn.disabled = false;
+        chipLabel(useLocBtn, 'Use Current Location');
+        if (err.code === err.PERMISSION_DENIED){
+          setStatus('Location access denied — check your browser settings, or use Choose Location.', true);
+        } else if (err.code === err.TIMEOUT){
+          setStatus('Location took too long — try again, or use Choose Location.', true);
+        } else {
+          setStatus("Couldn't get your location — try again, or use Choose Location.", true);
+        }
+      },
+      { timeout: 12000, enableHighAccuracy: true, maximumAge: 0 }
+    );
+  });
+
+  // --- Choose Location (manual lat/lng popover) ---
+  chooseLocBtn.addEventListener('click', function(){
+    var isOpen = !popover.hidden;
+    popover.hidden = isOpen;
+    chooseLocBtn.setAttribute('aria-expanded', String(!isOpen));
+    if (!isOpen) manualLat.focus();
+  });
+
+  document.addEventListener('click', function(e){
+    if (!popover.hidden && !popover.contains(e.target) && e.target !== chooseLocBtn){
+      popover.hidden = true;
+      chooseLocBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  manualGo.addEventListener('click', function(){
+    var lat = parseFloat(manualLat.value);
+    var lng = parseFloat(manualLng.value);
+    if (isNaN(lat) || lat < -90 || lat > 90){
+      setStatus('Enter a valid latitude between -90 and 90.', true);
+      manualLat.focus();
+      return;
+    }
+    if (isNaN(lng) || lng < -180 || lng > 180){
+      setStatus('Enter a valid longitude between -180 and 180.', true);
+      manualLng.focus();
+      return;
+    }
+    popover.hidden = true;
+    chooseLocBtn.setAttribute('aria-expanded', 'false');
+    chooseLocBtn.classList.add('is-active');
+    chipLabel(chooseLocBtn, 'Location set');
+    setStatus('Location set — taking you to nearby businesses…');
+    goWithLocation(lat, lng);
+  });
+
+  manualLat.addEventListener('keydown', function(e){ if (e.key === 'Enter') manualGo.click(); });
+  manualLng.addEventListener('keydown', function(e){ if (e.key === 'Enter') manualGo.click(); });
+})();
+</script>
 </body>
 </html>
