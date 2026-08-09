@@ -545,7 +545,7 @@
 <div class="wrap">
 <div class="section-head">
 <h2>Featured Businesses</h2>
-<a class="see-all" href="#">View All Businesses <svg class="icon"><use href="#i-arrow-right"></use></svg></a>
+<a class="see-all" href="#" id="viewAllBiz">View All Businesses <svg class="icon"><use href="#i-arrow-right"></use></svg></a>
 </div>
 <div class="biz-grid">
 <div class="biz-card">
@@ -800,4 +800,86 @@
 })();
 </script>
 </body>
-</html>
+</html><script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAl2louJdlrfxy7c-uCEvzhxHpKvh4mf0E",
+    authDomain: "stall-app-1aab7.firebaseapp.com",
+    projectId: "stall-app-1aab7",
+    storageBucket: "stall-app-1aab7.firebasestorage.app",
+    messagingSenderId: "425143387624",
+    appId: "1:425143387624:web:78de572da460e3852c105d"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const CATEGORY_ICON = {
+    Grocery: ["ph-grocery", "i-cart"],
+    Café: ["ph-cafe", "i-coffee"],
+    Cafe: ["ph-cafe", "i-coffee"],
+    Flowers: ["ph-flowers", "i-flower"],
+    Salon: ["ph-salon", "i-scissors"],
+    "Pet Grooming": ["ph-pets", "i-store"],
+  };
+  const DEFAULT_ICON = ["ph-default", "i-store"];
+
+  function escapeHtml(str) {
+    return String(str || "").replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+  }
+
+  function vendorCardHtml(v) {
+    const [phClass, iconId] = CATEGORY_ICON[v.category] || DEFAULT_ICON;
+    const photo = Array.isArray(v.photos) && v.photos[0];
+    const imgOrIcon = photo
+      ? `<img src="${escapeHtml(photo)}" alt="${escapeHtml(v.name)}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`
+      : `<svg class="icon biz-ph-icon"><use href="#${iconId}"></use></svg>`;
+    const ratingHtml = (typeof v.rating === "number")
+      ? `<div class="rating">★ ${v.rating.toFixed(1)} ${v.ratingsCount != null ? `<span>(${v.ratingsCount})</span>` : ""}</div>`
+      : "";
+    const locationBits = [v.address, v.category].filter(Boolean).join(" · ");
+    return `
+      <div class="biz-card">
+        <div class="biz-img ${phClass}">${imgOrIcon}</div>
+        <div class="biz-body">
+          <h4>${escapeHtml(v.name)}</h4>
+          ${ratingHtml}
+          <div class="biz-loc"><span>${escapeHtml(locationBits)}</span></div>
+        </div>
+      </div>`;
+  }
+
+  const KNOWN_NAMES = new Set(["Fresh Basket", "Brew & Co Café", "AYA Flowers", "Cut N Cute Men Salon"]);
+
+  async function loadAllVendors() {
+    const btn = document.getElementById("viewAllBiz");
+    const grid = document.querySelector(".biz-grid");
+    if (!grid) return;
+    btn.textContent = "Loading…";
+    try {
+      const snap = await getDocs(collection(db, "vendors"));
+      const vendors = snap.docs
+        .map((d) => ({ id: d.id, ...d.data() }))
+        .filter((v) => v.name && !KNOWN_NAMES.has(v.name));
+
+      if (vendors.length === 0) {
+        btn.textContent = "No more businesses";
+        return;
+      }
+      grid.insertAdjacentHTML("beforeend", vendors.map(vendorCardHtml).join(""));
+      btn.remove();
+    } catch (err) {
+      console.error("Failed to load vendors:", err);
+      btn.textContent = "Couldn't load — try again";
+    }
+  }
+
+  document.getElementById("viewAllBiz")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    loadAllVendors();
+  });
+</script>
