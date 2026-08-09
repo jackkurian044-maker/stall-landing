@@ -1,40 +1,130 @@
-# Contact Us
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact Us | STall</title>
+<style>
+  :root{
+    --bg:#0a0a0a;
+    --bg-alt:#111111;
+    --card:#161616;
+    --border:#2a2a2a;
+    --gold:#f0b429;
+    --gold-light:#f8cf6b;
+    --white:#ffffff;
+    --gray:#9c9c9c;
+    --max:820px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--bg);color:var(--white);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    line-height:1.65;
+  }
+  .wrap{max-width:var(--max);margin:0 auto;padding:48px 24px 80px;}
+  .back{
+    display:inline-block;color:var(--gold-light);text-decoration:none;
+    font-size:.85rem;margin-bottom:28px;border:1px solid var(--border);
+    padding:6px 14px;border-radius:8px;
+  }
+  .back:hover{border-color:var(--gold);}
+  h1{
+    font-size:2rem;margin-bottom:8px;
+    background:linear-gradient(155deg,var(--gold-light),var(--gold));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .updated{color:var(--gray);font-size:.85rem;margin-bottom:32px;}
+  h2{font-size:1.2rem;margin:32px 0 10px;color:var(--gold-light);}
+  p{margin-bottom:14px;color:#d8d8d8;}
+  ul{margin:0 0 14px 22px;color:#d8d8d8;}
+  li{margin-bottom:6px;}
+  a{color:var(--gold-light);}
+  .card{
+    background:var(--card);border:1px solid var(--border);border-radius:14px;
+    padding:20px 22px;margin-bottom:16px;
+  }
+  .field{margin-bottom:16px;}
+  .field label{
+    display:block;font-size:.8rem;color:var(--gray);margin-bottom:6px;
+  }
+  .field input, .field textarea{
+    width:100%;background:var(--bg);border:1px solid var(--border);
+    border-radius:8px;padding:11px 12px;color:var(--white);font-size:.95rem;
+    font-family:inherit;
+  }
+  .field input:focus, .field textarea:focus{
+    outline:none;border-color:var(--gold-dim);
+  }
+  .field textarea{resize:vertical;}
+  .submit-btn{
+    background:linear-gradient(155deg,var(--gold-light),var(--gold));
+    color:#1a1200;border:none;border-radius:8px;padding:12px 22px;
+    font-weight:700;font-size:.95rem;cursor:pointer;
+  }
+  .submit-btn:hover{filter:brightness(1.05);}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">&larr; Back to STall</a>
+<h1>Contact Us</h1>
+<p class="updated">Have a question, feedback, or a partnership idea? Send us a message.</p>
 
-## Let's Talk.
+<div id="sent-banner" class="card" style="display:none;border-color:#1f7a3d;background:rgba(31,122,61,.12);">
+  <strong style="color:#5ed989;">Thanks — your message is on its way!</strong>
+  <p style="margin:6px 0 0;">We'll get back to you as soon as we can.</p>
+</div>
 
-Got a question, a suggestion, or want to bring your business onto STall? We'd love to hear from you — just fill out the form below and we'll get back to you.
+<div class="card">
+<form id="contact-form" action="https://formsubmit.co/jackkurian044@gmail.com" method="POST">
+  <input type="hidden" name="_subject" value="New message from STall contact page" />
+  <input type="hidden" name="_template" value="table" />
+  <input type="hidden" name="_captcha" value="false" />
+  <input type="hidden" name="_next" value="https://stall.cutncutestudio.in/contact.html?sent=true" />
+  <!-- honeypot field to reduce spam -->
+  <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
 
----
+  <div class="field">
+    <label for="name">Name</label>
+    <input id="name" name="name" type="text" required />
+  </div>
 
-### Send Us a Message
+  <div class="field">
+    <label for="email">Email</label>
+    <input id="email" name="email" type="email" required />
+  </div>
 
-**Name**
-`[text input]`
+  <div class="field">
+    <label for="subject">Subject</label>
+    <input id="subject" name="subject" type="text" placeholder="What's this about?" />
+  </div>
 
-**Email**
-`[email input]`
+  <div class="field">
+    <label for="message">Message</label>
+    <textarea id="message" name="message" rows="6" required></textarea>
+  </div>
 
-**I am a...**
-`[dropdown: Customer / Business Owner / Other]`
+  <button type="submit" class="submit-btn">Send Message</button>
+</form>
+</div>
 
-**Subject**
-`[text input]`
+<h2>Other ways to reach us</h2>
+<div class="card">
+<p>Prefer social? Find us on
+<a href="https://www.facebook.com/profile.php?id=61592195613448" target="_blank" rel="noopener noreferrer">Facebook</a>
+or
+<a href="https://www.instagram.com/st_all_thats_all/" target="_blank" rel="noopener noreferrer">Instagram</a>.
+</p>
+<p>Business owner? <a href="register.html">Register your business</a> directly instead.</p>
+</div>
 
-**Message**
-`[textarea]`
-
-`[ Send Message ]`
-
----
-
-### Prefer a Quick Answer?
-
-Check out our [FAQs](#) before reaching out — you might find what you're looking for right away.
-
-### Own a Business?
-
-If you're looking to register your business on STall, skip the form and [get started here →](https://stall.cutncutestudio.in/register.html)
-
----
-
-*We typically respond within 1–2 business days.*
+<script>
+  if (new URLSearchParams(window.location.search).get('sent') === 'true') {
+    document.getElementById('sent-banner').style.display = 'block';
+    document.getElementById('contact-form').style.display = 'none';
+  }
+</script>
+</div>
+</body>
+</html>
