@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" type="image/png" href="/src/stall-logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<title>All Businesses | STall</title>
+<style>
+  :root{
+    --bg:#0a0a0a;
+    --bg-alt:#111111;
+    --card:#161616;
+    --card-hover:#1c1c1c;
+    --border:#2a2a2a;
+    --gold:#f0b429;
+    --gold-light:#f8cf6b;
+    --gold-dim:#8a6a1f;
+    --white:#ffffff;
+    --gray:#9c9c9c;
+    --gray-dim:#6f6f6f;
+    --green:#1f7a3d;
+    --radius:14px;
+    --max:1200px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--white);
+    font-family:'Inter',sans-serif;
+  }
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px;}
+  header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 24px;border-bottom:1px solid var(--border);
+  }
+  .logo{display:flex;align-items:center;gap:8px;font-family:'Poppins',sans-serif;font-weight:800;font-size:20px;}
+  .logo a{color:var(--white);text-decoration:none;display:flex;align-items:center;gap:8px;}
+  .back-link{
+    color:var(--gray);text-decoration:none;font-size:14px;font-weight:600;
+    display:flex;align-items:center;gap:6px;
+  }
+  .back-link:hover{color:var(--gold);}
+  .page-head{padding:48px 24px 24px;}
+  .page-head h1{font-family:'Poppins',sans-serif;font-size:32px;font-weight:800;margin-bottom:8px;}
+  .page-head p{color:var(--gray);font-size:15px;}
+  .filter-bar{
+    display:flex;gap:10px;flex-wrap:wrap;padding:0 24px 24px;
+  }
+  .filter-chip{
+    background:var(--card);border:1px solid var(--border);color:var(--gray);
+    padding:8px 16px;border-radius:999px;font-size:13px;font-weight:600;
+    cursor:pointer;transition:all .15s;
+  }
+  .filter-chip.active,.filter-chip:hover{background:var(--gold);color:#1a1400;border-color:var(--gold);}
+  .biz-grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:20px;padding:0 24px 64px;
+  }
+  .biz-card{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    overflow:hidden;transition:border-color .15s,transform .15s;
+  }
+  .biz-card:hover{border-color:var(--gold-dim);transform:translateY(-2px);}
+  .biz-img{
+    height:140px;display:flex;align-items:center;justify-content:center;
+    background:var(--card-hover);
+  }
+  .biz-img img{width:100%;height:100%;object-fit:cover;}
+  .biz-ph-icon{width:36px;height:36px;stroke:var(--gray-dim);fill:none;stroke-width:1.5;}
+  .icon{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .biz-body{padding:16px;}
+  .biz-body h4{font-family:'Poppins',sans-serif;font-size:16px;font-weight:700;margin-bottom:6px;}
+  .rating{color:var(--gold-light);font-size:13px;font-weight:600;margin-bottom:6px;}
+  .rating span{color:var(--gray-dim);font-weight:500;}
+  .biz-loc{color:var(--gray);font-size:12.5px;display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .biz-loc span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .state-msg{
+    grid-column:1/-1;text-align:center;color:var(--gray);padding:48px 0;font-size:14px;
+  }
+  .skeleton{
+    grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;
+  }
+  .skel-card{
+    height:220px;border-radius:var(--radius);background:linear-gradient(90deg,var(--card) 25%,var(--card-hover) 50%,var(--card) 75%);
+    background-size:200% 100%;animation:shimmer 1.4s infinite;
+  }
+  @keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <a href="index.html">
+      <svg class="icon" viewBox="0 0 24 24"><use href="#i-store"></use></svg>
+      STall
+    </a>
+  </div>
+  <a class="back-link" href="index.html">
+    <svg class="icon"><use href="#i-arrow-left"></use></svg>
+    Back to home
+  </a>
+</header>
+
+<div class="page-head wrap">
+  <h1>All Businesses</h1>
+  <p id="countLabel">Loading businesses near you…</p>
+</div>
+
+<div class="filter-bar wrap" id="filterBar" style="display:none;">
+  <button class="filter-chip active" data-cat="All">All</button>
+</div>
+
+<div class="biz-grid wrap" id="bizGrid">
+  <div class="skeleton">
+    <div class="skel-card"></div>
+    <div class="skel-card"></div>
+    <div class="skel-card"></div>
+    <div class="skel-card"></div>
+  </div>
+</div>
+
+<svg aria-hidden="true" style="display:none">
+  <symbol id="i-store" viewbox="0 0 24 24"><path d="M3 9l1-5h16l1 5"></path><path d="M3 9a2 2 0 0 0 4 0 2 2 0 0 0 4 0 2 2 0 0 0 4 0 2 2 0 0 0 4 0"></path><path d="M4 9v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"></path></symbol>
+  <symbol id="i-arrow-left" viewbox="0 0 24 24"><line x1="19" x2="5" y1="12" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></symbol>
+  <symbol id="i-cart" viewbox="0 0 24 24"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></symbol>
+  <symbol id="i-coffee" viewbox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" x2="6" y1="1" y2="4"></line><line x1="10" x2="10" y1="1" y2="4"></line><line x1="14" x2="14" y1="1" y2="4"></line></symbol>
+  <symbol id="i-flower" viewbox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M12 2a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3z"></path></symbol>
+  <symbol id="i-scissors" viewbox="0 0 24 24"><circle cx="6" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><line x1="20" x2="8.12" y1="4" y2="15.88"></line><line x1="14.47" x2="20" y1="14.48" y2="20"></line><line x1="8.12" x2="12" y1="8.12" y2="12"></line></symbol>
+</svg>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAl2louJdlrfxy7c-uCEvzhxHpKvh4mf0E",
+    authDomain: "stall-app-1aab7.firebaseapp.com",
+    projectId: "stall-app-1aab7",
+    storageBucket: "stall-app-1aab7.firebasestorage.app",
+    messagingSenderId: "425143387624",
+    appId: "1:425143387624:web:78de572da460e3852c105d"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const CATEGORY_ICON = {
+    Grocery: "i-cart",
+    Café: "i-coffee",
+    Cafe: "i-coffee",
+    Flowers: "i-flower",
+    Salon: "i-scissors",
+  };
+  const DEFAULT_ICON = "i-store";
+
+  function escapeHtml(str) {
+    return String(str || "").replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+  }
+
+  function vendorCardHtml(v) {
+    const iconId = CATEGORY_ICON[v.category] || DEFAULT_ICON;
+    const photo = Array.isArray(v.photos) && v.photos[0];
+    const imgOrIcon = photo
+      ? `<img src="${escapeHtml(photo)}" alt="${escapeHtml(v.name)}">`
+      : `<svg class="icon biz-ph-icon"><use href="#${iconId}"></use></svg>`;
+    const ratingHtml = (typeof v.rating === "number")
+      ? `<div class="rating">★ ${v.rating.toFixed(1)} ${v.ratingsCount != null ? `<span>(${v.ratingsCount})</span>` : ""}</div>`
+      : "";
+    const locationBits = [v.address, v.category].filter(Boolean).join(" · ");
+    return `
+      <div class="biz-card" data-category="${escapeHtml(v.category || "")}">
+        <div class="biz-img">${imgOrIcon}</div>
+        <div class="biz-body">
+          <h4>${escapeHtml(v.name)}</h4>
+          ${ratingHtml}
+          <div class="biz-loc"><span>${escapeHtml(locationBits)}</span></div>
+        </div>
+      </div>`;
+  }
+
+  function renderFilterBar(categories) {
+    const bar = document.getElementById("filterBar");
+    bar.innerHTML = `<button class="filter-chip active" data-cat="All">All</button>` +
+      categories.map((c) => `<button class="filter-chip" data-cat="${escapeHtml(c)}">${escapeHtml(c)}</button>`).join("");
+    bar.style.display = "flex";
+
+    bar.querySelectorAll(".filter-chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        bar.querySelectorAll(".filter-chip").forEach((c) => c.classList.remove("active"));
+        chip.classList.add("active");
+        const cat = chip.dataset.cat;
+        document.querySelectorAll(".biz-card").forEach((card) => {
+          card.style.display = (cat === "All" || card.dataset.category === cat) ? "" : "none";
+        });
+      });
+    });
+  }
+
+  async function loadVendors() {
+    const grid = document.getElementById("bizGrid");
+    const countLabel = document.getElementById("countLabel");
+    try {
+      const snap = await getDocs(collection(db, "vendors"));
+      const vendors = snap.docs
+        .map((d) => ({ id: d.id, ...d.data() }))
+        .filter((v) => v.name);
+
+      if (vendors.length === 0) {
+        grid.innerHTML = `<div class="state-msg">No businesses listed yet.</div>`;
+        countLabel.textContent = "0 businesses found";
+        return;
+      }
+
+      vendors.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      grid.innerHTML = vendors.map(vendorCardHtml).join("");
+      countLabel.textContent = `${vendors.length} business${vendors.length === 1 ? "" : "es"} found`;
+
+      const categories = [...new Set(vendors.map((v) => v.category).filter(Boolean))].sort();
+      if (categories.length > 1) renderFilterBar(categories);
+    } catch (err) {
+      console.error("Failed to load vendors:", err);
+      grid.innerHTML = `<div class="state-msg">Couldn't load businesses right now. Please try again shortly.</div>`;
+      countLabel.textContent = "";
+    }
+  }
+
+  loadVendors();
+</script>
+</body>
+</html>
