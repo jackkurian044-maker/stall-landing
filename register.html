@@ -190,7 +190,7 @@ footer{
   <div>
     <div class="premium-banner" id="premium-banner" style="display:none;align-items:center;gap:10px;background:rgba(243,183,61,0.12);border:1.5px solid var(--gold);border-radius:12px;padding:12px 16px;margin-bottom:20px;">
       <span style="font-size:1.2rem;">✦</span>
-      <span style="font-size:0.85rem;color:#fff;">You're on the fast track to <strong style="color:var(--gold);">Premium</strong> — list your store first, then we'll get you set up on the ₹499/month plan.</span>
+      <span style="font-size:0.85rem;color:#fff;">You're on the fast track to <strong style="color:var(--gold);">Premium</strong> — list your store first, then we'll get you set up with pricing for your market.</span>
     </div>
 
     <div class="head-eyebrow" id="head-eyebrow">Free, forever · No commission</div>
@@ -483,6 +483,20 @@ if (wantsPremium) {
 let geoAutocomplete = null;
 let geocoder = null;
 
+// Which market's pricing to show at the Premium step. Auto-set from the
+// store's address once we have one (see applyPlaceResult below); the vendor
+// can still override it manually at the pricing step since a typed-but-not-
+// selected address, or a GPS fix that failed to reverse-geocode, leaves this
+// null. Only 'IN' and 'AE' are wired to real pricing today — anything else
+// (a vendor outside both markets) falls back to 'IN' with the override
+// visible so they aren't silently charged the wrong currency.
+let detectedCountry = null;
+
+function countryFromPlace(place) {
+  const comp = (place.address_components || []).find((c) => c.types.includes('country'));
+  return comp ? comp.short_name : null; // e.g. 'IN', 'AE'
+}
+
 function setLocationStatus(kind, msg) {
   const el = document.getElementById('location-status');
   el.className = 'location-status ' + kind;
@@ -490,6 +504,7 @@ function setLocationStatus(kind, msg) {
 }
 
 function applyPlaceResult(place) {
+  detectedCountry = countryFromPlace(place);
   const lat = typeof place.geometry.location.lat === 'function' ? place.geometry.location.lat() : place.geometry.location.lat;
   const lng = typeof place.geometry.location.lng === 'function' ? place.geometry.location.lng() : place.geometry.location.lng;
   document.getElementById('geo-lat').value = lat;
@@ -509,8 +524,10 @@ function initGoogleMaps() {
   geocoder = new google.maps.Geocoder();
   geoAutocomplete = new google.maps.places.Autocomplete(input, {
     fields: ['formatted_address', 'geometry', 'place_id'],
-    // Bias results towards India; remove/adjust if Stall expands beyond Bengaluru.
-    componentRestrictions: { country: 'in' },
+    // India and UAE are both live markets now — restricting further would
+    // hide real addresses in Dubai/Abu Dhabi/Ajman. Add more country codes
+    // here as Stall expands into new markets.
+    componentRestrictions: { country: ['in', 'ae'] },
   });
   geoAutocomplete.addListener('place_changed', () => {
     const place = geoAutocomplete.getPlace();
@@ -806,17 +823,45 @@ document.getElementById('reg-form').addEventListener('submit', async (e) => {
     if (wantsPremium) {
       btn.textContent = '✓ Store listed — Premium next';
       btn.style.display = 'none';
+
+      // ---------------------------------------------------------------
+      // REGIONAL PRICING — one recurring plan ("Google Profile Management
+      // + Store Boosting"), priced separately per market. Region is
+      // auto-picked from the store's own address (detectedCountry, set in
+      // applyPlaceResult above); the pill toggle below lets the vendor
+      // correct it if detection missed (manual/GPS-only address, or a
+      // market outside India/UAE, which falls back to India pricing).
+      // Website-build fees (one-time, not recurring) aren't sold here yet
+      // — that's a separate quote/invoice flow, not a subscription button.
+      // ---------------------------------------------------------------
+      const REGIONS = {
+        IN: {
+          label: '🇮🇳 India',
+          monthlyPrice: '₹499/mo',
+          annualPrice: '₹4,999/yr',
+          monthlyButtonId: 'REPLACE_WITH_IN_MONTHLY_PAYMENT_BUTTON_ID',
+          annualButtonId: 'REPLACE_WITH_IN_ANNUAL_PAYMENT_BUTTON_ID',
+        },
+        AE: {
+          label: '🇦🇪 UAE',
+          monthlyPrice: 'AED 100/mo',
+          annualPrice: 'AED 999/yr',
+          monthlyButtonId: 'REPLACE_WITH_AE_MONTHLY_PAYMENT_BUTTON_ID',
+          annualButtonId: 'REPLACE_WITH_AE_ANNUAL_PAYMENT_BUTTON_ID',
+        },
+      };
+      let selectedRegion = (detectedCountry === 'AE') ? 'AE' : 'IN';
+
       const premiumNext = document.createElement('div');
       premiumNext.style.cssText = 'background:var(--navy-2);border:1.5px solid var(--gold);border-radius:14px;padding:22px;margin-top:22px;text-align:center;';
       premiumNext.innerHTML = `
         <div style="font-size:1.5rem;margin-bottom:8px;">✦</div>
         <div style="font-weight:700;margin-bottom:6px;">Your store is listed!</div>
         <div style="font-size:0.88rem;color:var(--muted);margin-bottom:6px;">Save your claim code: <strong style="color:var(--gold);letter-spacing:0.05em;">${claimCode}</strong></div>
-        <div style="font-size:0.85rem;color:var(--muted);margin-bottom:18px;">Next, let's get Premium turned on — auto review replies, analytics, and boosted placement.</div>
-        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-          <div id="razorpay-monthly" style="flex:1;min-width:180px;"></div>
-          <div id="razorpay-annual" style="flex:1;min-width:180px;"></div>
-        </div>
+        <div style="font-size:0.85rem;color:var(--muted);margin-bottom:14px;">Next, let's get Premium turned on — auto review replies, analytics, and boosted placement.</div>
+        <div id="region-toggle" style="display:flex;gap:8px;justify-content:center;margin-bottom:16px;"></div>
+        <div id="region-price" style="font-size:0.8rem;color:var(--muted);margin-bottom:14px;"></div>
+        <div id="razorpay-buttons" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"></div>
       `;
       btn.insertAdjacentElement('afterend', premiumNext);
       if (submitNote) submitNote.style.display = 'none';
@@ -824,13 +869,13 @@ document.getElementById('reg-form').addEventListener('submit', async (e) => {
       // -----------------------------------------------------------------
       // RAZORPAY PAYMENT BUTTONS — script tags set via innerHTML never
       // execute, so each button is built with real DOM calls instead.
-      // Create these in Razorpay Dashboard → Payment Pages → Payment
-      // Buttons (use a Subscription-type button for true auto-recurring
-      // billing). Swap in your real button IDs below — these are public
-      // identifiers, safe to embed client-side (no secret key involved).
+      // Create four Subscription-type buttons in Razorpay Dashboard →
+      // Payment Pages → Payment Buttons (IN monthly, IN annual, AE
+      // monthly, AE annual — set each to the matching currency/amount)
+      // and swap in the real button IDs in REGIONS above. These IDs are
+      // public identifiers, safe to embed client-side.
       // -----------------------------------------------------------------
-      function mountRazorpayButton(containerId, buttonId) {
-        const container = document.getElementById(containerId);
+      function mountRazorpayButton(container, buttonId) {
         const form = document.createElement('form');
         const script = document.createElement('script');
         script.src = 'https://checkout.razorpay.com/v1/payment-button.js';
@@ -839,8 +884,39 @@ document.getElementById('reg-form').addEventListener('submit', async (e) => {
         form.appendChild(script);
         container.appendChild(form);
       }
-      mountRazorpayButton('razorpay-monthly', 'REPLACE_WITH_MONTHLY_PAYMENT_BUTTON_ID');
-      mountRazorpayButton('razorpay-annual', 'REPLACE_WITH_ANNUAL_PAYMENT_BUTTON_ID');
+
+      function renderRegion() {
+        const region = REGIONS[selectedRegion];
+        const toggle = document.getElementById('region-toggle');
+        toggle.innerHTML = '';
+        Object.keys(REGIONS).forEach((code) => {
+          const pill = document.createElement('button');
+          pill.type = 'button';
+          pill.textContent = REGIONS[code].label;
+          const active = code === selectedRegion;
+          pill.style.cssText = `border-radius:999px;padding:6px 14px;font-size:0.8rem;font-weight:600;cursor:pointer;border:1.5px solid var(--gold);background:${active ? 'var(--gold)' : 'transparent'};color:${active ? 'var(--navy)' : '#fff'};`;
+          pill.addEventListener('click', () => {
+            selectedRegion = code;
+            renderRegion();
+          });
+          toggle.appendChild(pill);
+        });
+
+        document.getElementById('region-price').textContent =
+          `${region.monthlyPrice} · or ${region.annualPrice}`;
+
+        const buttonsWrap = document.getElementById('razorpay-buttons');
+        buttonsWrap.innerHTML = '';
+        const monthlyDiv = document.createElement('div');
+        monthlyDiv.style.cssText = 'flex:1;min-width:180px;';
+        const annualDiv = document.createElement('div');
+        annualDiv.style.cssText = 'flex:1;min-width:180px;';
+        buttonsWrap.appendChild(monthlyDiv);
+        buttonsWrap.appendChild(annualDiv);
+        mountRazorpayButton(monthlyDiv, region.monthlyButtonId);
+        mountRazorpayButton(annualDiv, region.annualButtonId);
+      }
+      renderRegion();
     } else {
       btn.textContent = '✓ Store listed!';
       if (submitNote) {
