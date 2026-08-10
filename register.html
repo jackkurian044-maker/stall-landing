@@ -827,10 +827,10 @@ document.getElementById('reg-form').addEventListener('submit', async (e) => {
       // ---------------------------------------------------------------
       // REGIONAL PRICING — one recurring plan ("Google Profile Management
       // + Store Boosting"), priced separately per market. Region is
-      // auto-picked from the store's own address (detectedCountry, set in
-      // applyPlaceResult above); the pill toggle below lets the vendor
-      // correct it if detection missed (manual/GPS-only address, or a
-      // market outside India/UAE, which falls back to India pricing).
+      // locked to whatever we detected from the store's own address
+      // (detectedCountry, set in applyPlaceResult above) — deliberately
+      // no toggle here, so a UAE vendor never sees India's price and vice
+      // versa. Anything outside India/UAE falls back to India pricing.
       // Website-build fees (one-time, not recurring) aren't sold here yet
       // — that's a separate quote/invoice flow, not a subscription button.
       // ---------------------------------------------------------------
@@ -850,7 +850,12 @@ document.getElementById('reg-form').addEventListener('submit', async (e) => {
           annualButtonId: 'REPLACE_WITH_AE_ANNUAL_PAYMENT_BUTTON_ID',
         },
       };
-      let selectedRegion = (detectedCountry === 'AE') ? 'AE' : 'IN';
+      // Region is locked to what we detected from the vendor's own address
+      // (detectedCountry, set in applyPlaceResult above) — no toggle, so a
+      // UAE vendor never sees India pricing and vice versa. Anything we
+      // couldn't place in India or UAE falls back to India pricing (still
+      // just the one region shown, not a choice).
+      const selectedRegion = (detectedCountry === 'AE') ? 'AE' : 'IN';
 
       const premiumNext = document.createElement('div');
       premiumNext.style.cssText = 'background:var(--navy-2);border:1.5px solid var(--gold);border-radius:14px;padding:22px;margin-top:22px;text-align:center;';
@@ -859,7 +864,6 @@ document.getElementById('reg-form').addEventListener('submit', async (e) => {
         <div style="font-weight:700;margin-bottom:6px;">Your store is listed!</div>
         <div style="font-size:0.88rem;color:var(--muted);margin-bottom:6px;">Save your claim code: <strong style="color:var(--gold);letter-spacing:0.05em;">${claimCode}</strong></div>
         <div style="font-size:0.85rem;color:var(--muted);margin-bottom:14px;">Next, let's get Premium turned on — auto review replies, analytics, and boosted placement.</div>
-        <div id="region-toggle" style="display:flex;gap:8px;justify-content:center;margin-bottom:16px;"></div>
         <div id="region-price" style="font-size:0.8rem;color:var(--muted);margin-bottom:14px;"></div>
         <div id="razorpay-buttons" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"></div>
       `;
@@ -887,20 +891,6 @@ document.getElementById('reg-form').addEventListener('submit', async (e) => {
 
       function renderRegion() {
         const region = REGIONS[selectedRegion];
-        const toggle = document.getElementById('region-toggle');
-        toggle.innerHTML = '';
-        Object.keys(REGIONS).forEach((code) => {
-          const pill = document.createElement('button');
-          pill.type = 'button';
-          pill.textContent = REGIONS[code].label;
-          const active = code === selectedRegion;
-          pill.style.cssText = `border-radius:999px;padding:6px 14px;font-size:0.8rem;font-weight:600;cursor:pointer;border:1.5px solid var(--gold);background:${active ? 'var(--gold)' : 'transparent'};color:${active ? 'var(--navy)' : '#fff'};`;
-          pill.addEventListener('click', () => {
-            selectedRegion = code;
-            renderRegion();
-          });
-          toggle.appendChild(pill);
-        });
 
         document.getElementById('region-price').textContent =
           `${region.monthlyPrice} · or ${region.annualPrice}`;
