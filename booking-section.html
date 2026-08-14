@@ -1,0 +1,205 @@
+<!-- ============================================================
+  STALL — VENDOR WEBSITE BOOKING SECTION
+  Drop this <section> into register.html, right after the existing
+  vendor sign-up form section. Uses the same inline-CSS approach and
+  navy/gold/cream palette already in register.html.
+  Requires: Razorpay Checkout script + your Razorpay key ID.
+  ============================================================ -->
+
+<section id="get-website" style="
+  background:#fdfaf3;
+  padding:64px 20px;
+  font-family:'Segoe UI', Arial, sans-serif;
+  color:#1a2138;
+">
+  <div style="max-width:640px;margin:0 auto;text-align:center;">
+    <h2 style="
+      font-size:28px;
+      color:#1a2138;
+      margin-bottom:8px;
+      letter-spacing:0.5px;
+    ">Get your own store website</h2>
+    <p style="color:#5a5f6e;font-size:15px;margin-bottom:32px;">
+      A dedicated page for your store on Stall — no domain purchase needed.
+      Live in minutes, shareable on WhatsApp and Instagram.
+    </p>
+
+    <!-- Plan card -->
+    <div style="
+      background:#ffffff;
+      border:1px solid #e8dfc4;
+      border-radius:14px;
+      padding:32px 28px;
+      box-shadow:0 4px 18px rgba(26,33,56,0.06);
+      text-align:left;
+    ">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:18px;">
+        <span style="font-size:18px;font-weight:600;color:#1a2138;">Store website</span>
+        <span style="font-size:26px;font-weight:700;color:#b8892b;">₹999<span style="font-size:13px;font-weight:400;color:#8a8f9c;"> one-time</span></span>
+      </div>
+
+      <ul style="list-style:none;padding:0;margin:0 0 24px;color:#3d4356;font-size:14px;line-height:1.9;">
+        <li>✓ Your own page at stall.cutncutestudio.in/store/your-shop-name</li>
+        <li>✓ Logo, photos, hours, offers and contact details</li>
+        <li>✓ Direct WhatsApp ordering link</li>
+        <li>✓ Editable anytime from your own dashboard</li>
+        <li>✓ Listed automatically in nearby-store search</li>
+      </ul>
+
+      <!-- Booking form -->
+      <form id="storeBookingForm" style="display:flex;flex-direction:column;gap:12px;">
+        <input type="text" id="ownerName" placeholder="Your name" required
+          style="padding:12px 14px;border:1px solid #d8d2bd;border-radius:8px;font-size:14px;">
+        <input type="text" id="storeName" placeholder="Store name" required
+          style="padding:12px 14px;border:1px solid #d8d2bd;border-radius:8px;font-size:14px;">
+        <input type="tel" id="storePhone" placeholder="WhatsApp / phone number" required
+          style="padding:12px 14px;border:1px solid #d8d2bd;border-radius:8px;font-size:14px;">
+
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:13px;color:#8a8f9c;white-space:nowrap;">stall.cutncutestudio.in/store/</span>
+          <input type="text" id="storeSlug" placeholder="your-shop-name" required
+            style="flex:1;padding:12px 14px;border:1px solid #d8d2bd;border-radius:8px;font-size:14px;">
+        </div>
+        <div id="slugStatus" style="font-size:12px;min-height:16px;"></div>
+
+        <input type="file" id="storeLogo" accept="image/*"
+          style="font-size:13px;color:#5a5f6e;">
+
+        <button type="submit" id="payButton" style="
+          margin-top:8px;
+          background:#1a2138;
+          color:#f5d98e;
+          border:none;
+          border-radius:8px;
+          padding:14px;
+          font-size:15px;
+          font-weight:600;
+          cursor:pointer;
+          letter-spacing:0.3px;
+        ">Pay ₹999 & create my page</button>
+
+        <p id="formError" style="color:#b3312c;font-size:13px;margin:0;display:none;"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+
+  // Reuse the same Firebase config already used elsewhere in register.html (project stall-app-1aab7)
+  const firebaseConfig = window.STALL_FIREBASE_CONFIG; // set this once in register.html's existing <script>
+  const app = initializeApp(firebaseConfig, "bookingApp");
+  const db = getFirestore(app);
+  const functions = getFunctions(app);
+
+  const form = document.getElementById('storeBookingForm');
+  const slugInput = document.getElementById('storeSlug');
+  const slugStatus = document.getElementById('slugStatus');
+  const errorBox = document.getElementById('formError');
+  const payButton = document.getElementById('payButton');
+
+  let slugAvailable = false;
+
+  // Slugify as the user types
+  slugInput.addEventListener('input', () => {
+    slugInput.value = slugInput.value
+      .toLowerCase()
+      .replace(/[^a-z0-9-\s]/g, '')
+      .replace(/\s+/g, '-');
+  });
+
+  // Debounced availability check against Firestore
+  let slugTimer;
+  slugInput.addEventListener('blur', checkSlug);
+  slugInput.addEventListener('input', () => {
+    clearTimeout(slugTimer);
+    slugTimer = setTimeout(checkSlug, 500);
+  });
+
+  async function checkSlug() {
+    const slug = slugInput.value.trim();
+    if (!slug) { slugStatus.textContent = ''; return; }
+    slugStatus.style.color = '#8a8f9c';
+    slugStatus.textContent = 'Checking availability…';
+    const snap = await getDoc(doc(db, 'vendors', slug));
+    if (snap.exists()) {
+      slugAvailable = false;
+      slugStatus.style.color = '#b3312c';
+      slugStatus.textContent = 'Already taken — try ' + slug + '-2';
+    } else {
+      slugAvailable = true;
+      slugStatus.style.color = '#4a7a3e';
+      slugStatus.textContent = 'Available';
+    }
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBox.style.display = 'none';
+
+    const ownerName = document.getElementById('ownerName').value.trim();
+    const storeName = document.getElementById('storeName').value.trim();
+    const storePhone = document.getElementById('storePhone').value.trim();
+    const slug = slugInput.value.trim();
+
+    if (!ownerName || !storeName || !storePhone || !slug) {
+      errorBox.textContent = 'Please fill in every field.';
+      errorBox.style.display = 'block';
+      return;
+    }
+    if (!slugAvailable) {
+      await checkSlug();
+      if (!slugAvailable) {
+        errorBox.textContent = 'That page name is taken — please choose another.';
+        errorBox.style.display = 'block';
+        return;
+      }
+    }
+
+    payButton.disabled = true;
+    payButton.textContent = 'Creating order…';
+
+    try {
+      // Cloud Function creates a Razorpay order server-side and returns its id
+      const createOrder = httpsCallable(functions, 'createStoreOrder');
+      const { data } = await createOrder({ ownerName, storeName, storePhone, slug });
+
+      const rzp = new Razorpay({
+        key: 'rzp_live_XXXXXXXXXXXX', // your Razorpay key id
+        amount: data.amount,          // 99900 (paise)
+        currency: 'INR',
+        order_id: data.orderId,
+        name: 'Stall',
+        description: storeName + ' — store website',
+        prefill: { name: ownerName, contact: storePhone },
+        theme: { color: '#1a2138' },
+        handler: function () {
+          // Actual provisioning happens via the Razorpay webhook (server-side,
+          // verified) — this just gives the vendor a friendly wait screen.
+          form.innerHTML = `
+            <div style="text-align:center;padding:20px 0;">
+              <p style="font-size:16px;font-weight:600;color:#1a2138;margin-bottom:6px;">Payment received</p>
+              <p style="font-size:14px;color:#5a5f6e;">Your page is being set up — you'll get a WhatsApp message
+              with the live link at ${storePhone} within a few minutes.</p>
+            </div>`;
+        },
+        modal: {
+          ondismiss: function () {
+            payButton.disabled = false;
+            payButton.textContent = 'Pay ₹999 & create my page';
+          }
+        }
+      });
+      rzp.open();
+    } catch (err) {
+      errorBox.textContent = 'Something went wrong starting payment. Please try again.';
+      errorBox.style.display = 'block';
+      payButton.disabled = false;
+      payButton.textContent = 'Pay ₹999 & create my page';
+    }
+  });
+</script>
