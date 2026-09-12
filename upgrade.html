@@ -312,6 +312,18 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
 .social{display:flex;gap:12px;color:var(--gray)}
 .social span{width:27px;height:27px;border:1px solid #333;border-radius:50%;display:grid;place-items:center;font-size:.65rem}
 
+.razorpay-wrap{
+  margin-top:auto;
+  width:100%;
+  min-height:46px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.razorpay-wrap form{width:100%}
+.razorpay-wrap iframe{max-width:100%!important}
+
 /* Mobile */
 @media(max-width:1000px){
   .nav-links{display:none}.menu{display:block}
@@ -452,7 +464,7 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
   </div>
 </section>
 
-<section class="pricing">
+<section class="pricing" id="pricing">
   <div class="wrap">
     <div class="section-head">
       <div class="eyebrow">Choose Your Plan</div>
@@ -488,13 +500,17 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
           <li>Better visibility on STall</li>
           <li>Business insights</li>
         </ul>
-        <a class="btn card-btn btn-gold" href="#payment">Upgrade Now — ₹99 →</a>
+        <div class="razorpay-wrap card-btn">
+          <form>
+            <script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_TakQddcqxbkshT" async></script>
+          </form>
+        </div>
       </article>
 
       <article class="card">
         <h3>Digital Growth Audit</h3>
         <div class="tagline">Find new opportunities</div>
-        <div class="price">₹499 <small>one-time</small></div>
+        <div class="price">₹499 <small>subscription</small></div>
         <ul class="features">
           <li>Digital presence audit</li>
           <li>Google Business review</li>
@@ -503,13 +519,13 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
           <li>Growth opportunities</li>
           <li>Action plan</li>
         </ul>
-        <a class="btn card-btn btn-ghost" href="#payment">Get Audit — ₹499</a>
+        <a class="btn card-btn btn-gold" href="https://rzp.io/rzp/E5Lkiiw" target="_blank" rel="noopener noreferrer">Start Audit — ₹499 →</a>
       </article>
 
       <article class="card">
         <h3>Growth Setup</h3>
         <div class="tagline">Turn visibility into customers</div>
-        <div class="price">₹999 <small>one-time</small></div>
+        <div class="price">₹999 <small>subscription</small></div>
         <ul class="features">
           <li>Everything in Growth Audit</li>
           <li>Profile optimization</li>
@@ -518,7 +534,7 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
           <li>Offer/profile optimization</li>
           <li>Growth recommendations</li>
         </ul>
-        <a class="btn card-btn btn-ghost" href="#payment">Get Setup — ₹999</a>
+        <a class="btn card-btn btn-gold" href="https://rzp.io/rzp/4TjcN9A" target="_blank" rel="noopener noreferrer">Start Growth Setup — ₹999 →</a>
       </article>
     </div>
 
@@ -551,6 +567,10 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
             <div class="faq-a">No. STall Verified is designed as a one-time ₹99 upgrade.</div>
           </div>
           <div class="faq-item">
+            <button class="faq-q">Are Growth Audit and Growth Setup subscriptions?<span class="arrow">⌄</span></button>
+            <div class="faq-a">Yes. Digital Growth Audit and Growth Setup are subscription products. Your subscription checkout will open securely through Razorpay.</div>
+          </div>
+          <div class="faq-item">
             <button class="faq-q">What happens after upgrade?<span class="arrow">⌄</span></button>
             <div class="faq-a">Your account can be upgraded to the selected product and the relevant business features can be activated.</div>
           </div>
@@ -570,8 +590,7 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
           <p>Upgrade now and unlock more opportunities on STall.</p>
         </div>
       </div>
-      <!-- Replace #payment below with the real payment URL when ready. -->
-      <a class="btn btn-gold" href="#payment">Upgrade to STall Verified — ₹99 →</a>
+      <a class="btn btn-gold" href="#pricing">Choose a Growth Plan →</a>
     </div>
   </div>
 </section>
