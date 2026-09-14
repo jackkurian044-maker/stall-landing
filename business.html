@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="index,follow">
+<title>Business Profile | STall</title>
+<meta name="description" content="Discover local businesses on STall.">
+<style>body{margin:0;background:#0a0a0a;color:#fff;font-family:Arial,sans-serif}.wrap{max-width:900px;margin:auto;padding:24px}.top{padding:18px 24px;border-bottom:1px solid #2a2a2a}.top a{color:#fff;text-decoration:none;font-weight:700}.card{margin-top:36px;background:#161616;border:1px solid #2a2a2a;border-radius:16px;padding:28px}.eyebrow{color:#f0b429;font-weight:700;text-transform:uppercase;font-size:12px;letter-spacing:.08em}.hero h1{font-size:38px;margin:8px 0}.meta{color:#9c9c9c;line-height:1.7}.rating{color:#f8cf6b;font-weight:700;margin:12px 0}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.btn{padding:12px 18px;border-radius:10px;text-decoration:none;font-weight:700}.primary{background:#f0b429;color:#151000}.secondary{border:1px solid #2a2a2a;color:#fff}.status{text-align:center;color:#9c9c9c;padding:30px}.error{color:#ff9d9d}</style>
+</head>
+<body>
+<header class="top"><a href="index.html">STall</a></header>
+<main class="wrap"><section class="card hero" id="profile"><div class="status">Loading business profile…</div></section></main>
+<script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import{getFirestore,doc,getDoc}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+const firebaseConfig={apiKey:'AIzaSyAl2louJdlrfxy7c-uCEvzhxHpKvh4mf0E',authDomain:'stall-app-1aab7.firebaseapp.com',projectId:'stall-app-1aab7',storageBucket:'stall-app-1aab7.firebasestorage.app',messagingSenderId:'425143387624',appId:'1:425143387624:web:78de572da460e3852c105d'};
+const db=getFirestore(initializeApp(firebaseConfig));
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const id=new URLSearchParams(location.search).get('id');
+const root=document.getElementById('profile');
+async function load(){
+ if(!id){root.innerHTML='<div class="status error">Business profile not specified.</div>';return}
+ try{
+  const snap=await getDoc(doc(db,'vendors',id));
+  if(!snap.exists()){root.innerHTML='<div class="status error">Business profile not found.</div>';return}
+  const v={id:snap.id,...snap.data()};
+  const name=v.name||'Local Business',cat=v.category||'Local Business',address=v.address||'',phone=v.phone||'',wa=v.whatsapp||v.phone||'',rating=typeof v.rating==='number'?v.rating:null,rc=v.ratingsCount??'';
+  document.title=`${name} | ${cat} | STall`;
+  const desc=`${name} — ${cat}${address?' in '+address:''}. Find contact details and business information on STall.`;
+  document.querySelector('meta[name="description"]').content=desc;
+  const phoneUrl=phone?'tel:'+encodeURIComponent(phone):'';
+  const waUrl=wa?'https://wa.me/'+String(wa).replace(/\D/g,''):'';
+  root.innerHTML=`<div class="eyebrow">${esc(cat)}</div><h1>${esc(name)}</h1>${rating!==null?`<div class="rating">★ ${rating.toFixed(1)}${rc!==''?` (${esc(rc)} reviews)`:''}</div>`:''}<div class="meta">${esc(address)}</div><div class="actions">${phone?`<a class="btn primary" href="${phoneUrl}">Call Business</a>`:''}${wa?`<a class="btn secondary" href="${waUrl}" target="_blank" rel="noopener">WhatsApp</a>`:''}${address?`<a class="btn secondary" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}" target="_blank" rel="noopener">Get Directions</a>`:''}</div><div class="section"><h2>About this business</h2><p class="meta">Discover ${esc(name)} on STall and connect with this local business.</p></div>`;
+  const ld={'@context':'https://schema.org','@type':'LocalBusiness','name':name,'url':location.href};
+  if(address)ld.address={'@type':'PostalAddress','streetAddress':address};
+  if(phone)ld.telephone=phone;
+  if(rating!==null)ld.aggregateRating={'@type':'AggregateRating','ratingValue':rating,'bestRating':5};
+  const s=document.createElement('script');s.type='application/ld+json';s.textContent=JSON.stringify(ld);document.head.appendChild(s);
+ }catch(e){console.error(e);root.innerHTML='<div class="status error">Could not load this business profile right now.</div>'}
+}
+load();
+</script>
+</body>
+</html>
