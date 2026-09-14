@@ -947,6 +947,16 @@ document.getElementById('reg-form').addEventListener('submit', async (e) => {
       createdAt: serverTimestamp(),
     });
 
+    // NEW REGISTRATION -> UPGRADE
+    // The store is already saved as a free listing. Carry its real Firestore
+    // vendor ID and claim code into the existing upgrade page.
+    const upgradeUrl = new URL('upgrade.html', window.location.href);
+    upgradeUrl.searchParams.set('id', vendorRef.id);
+    upgradeUrl.searchParams.set('new', '1');
+    upgradeUrl.searchParams.set('claim', claimCode);
+    window.location.href = upgradeUrl.toString();
+    return;
+
     if (wantsPremium) {
       btn.textContent = '✓ Store listed — Premium next';
       btn.style.display = 'none';
