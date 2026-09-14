@@ -342,6 +342,17 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
   .footer-inner{flex-direction:column;align-items:flex-start}
   .footer-links{flex-wrap:wrap}
 }
+
+
+/* Registration claim handoff */
+.claim-handoff{margin:0 auto 28px;max-width:760px;border:1px solid var(--gold-dim);border-radius:14px;padding:20px;background:linear-gradient(100deg,rgba(240,180,41,.10),rgba(17,17,17,.96));text-align:center}
+.claim-handoff .claim-label{color:var(--gold);font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.claim-handoff h3{margin:5px 0 8px;font-size:1.2rem}
+.claim-handoff p{color:var(--gray);font-size:.78rem;margin-bottom:12px}
+.claim-id{display:inline-flex;align-items:center;justify-content:center;min-width:190px;padding:11px 18px;border:1px solid var(--gold-dim);border-radius:9px;background:#0b0b0b;color:var(--gold-light);font-family:monospace;font-size:1.2rem;font-weight:800;letter-spacing:.18em}
+.claim-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px}
+.claim-note{color:var(--gray-dim);font-size:.68rem;margin-top:10px}
+
 </style>
 </head>
 
@@ -472,7 +483,7 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
           <li>Photos & business information</li>
           <li>Edit your listing anytime</li>
         </ul>
-        <a class="btn card-btn btn-ghost" href="https://stallapp.stallwale.in/">Current Plan</a>
+        <a class="btn card-btn btn-ghost" href="stallapp.stallwale.in">Current Plan</a>
       </article>
 
       <article class="card popular">
@@ -488,11 +499,7 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
           <li>Better visibility on STall</li>
           <li>Business insights</li>
         </ul>
-        <div class="razorpay-wrap card-btn">
-          <form>
-            <script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_TakQddcqxbkshT" async></script>
-          </form>
-        </div>
+        <a class="btn card-btn btn-gold" href="#payment">Upgrade Now — ₹99 →</a>
       </article>
 
       <article class="card">
@@ -507,13 +514,13 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
           <li>Growth opportunities</li>
           <li>Action plan</li>
         </ul>
-        <a class="btn card-btn btn-ghost" href="https://rzp.io/rzp/4TjcN9A" target="_blank" rel="noopener">Get Audit — ₹499</a>
+        <a class="btn card-btn btn-ghost" href="#payment">Get Audit — ₹499</a>
       </article>
 
       <article class="card">
         <h3>Growth Setup</h3>
         <div class="tagline">Turn visibility into customers</div>
-        <div class="price">₹999 <small>subscription</small></div>
+        <div class="price">₹999 <small>one-time</small></div>
         <ul class="features">
           <li>Everything in Growth Audit</li>
           <li>Profile optimization</li>
@@ -522,7 +529,7 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
           <li>Offer/profile optimization</li>
           <li>Growth recommendations</li>
         </ul>
-        <a class="btn card-btn btn-ghost" href="https://rzp.io/rzp/E5Lkiiw" target="_blank" rel="noopener">Get Setup — ₹999</a>
+        <a class="btn card-btn btn-ghost" href="#payment">Get Setup — ₹999</a>
       </article>
     </div>
 
@@ -575,7 +582,7 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
         </div>
       </div>
       <!-- Replace #payment below with the real payment URL when ready. -->
-      <a class="btn btn-gold" href="#pricing">Choose a Growth Plan →</a>
+      <a class="btn btn-gold" href="#payment">Upgrade to STall Verified — ₹99 →</a>
     </div>
   </div>
 </section>
@@ -603,6 +610,30 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
 </footer>
 
 <script>
+
+
+// Registration -> upgrade claim handoff. Do not modify store ownership here;
+// ownership is established by the existing STall Claim flow.
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  const claim = (params.get('claim') || '').trim().toUpperCase();
+  const handoff = document.getElementById('claimHandoff');
+  const value = document.getElementById('claimIdValue');
+  const copy = document.getElementById('copyClaimId');
+  if (!claim || !handoff || !value) return;
+  value.textContent = claim;
+  handoff.hidden = false;
+  if (copy) copy.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(claim);
+      copy.textContent = '✓ Claim ID Copied';
+      setTimeout(() => copy.textContent = 'Copy Claim ID', 1800);
+    } catch {
+      copy.textContent = claim;
+    }
+  });
+})();
+
 document.querySelectorAll('.faq-q').forEach(btn=>{
   btn.addEventListener('click',()=>{
     btn.parentElement.classList.toggle('open');
