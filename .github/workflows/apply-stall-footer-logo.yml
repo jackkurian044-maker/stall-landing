@@ -1,0 +1,35 @@
+name: Apply STall business growth logo and footer
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply approved logo and footer
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('business-growth.html')
+          s=p.read_text(encoding='utf-8')
+          if '<!-- STALL-FOOTER-LOGO-V1 -->' in s:
+              raise SystemExit(0)
+          s=s.replace('stall-logo.png','logo-cropped.png')
+          css='''.footer-grid{display:grid;grid-template-columns:1.25fr repeat(3,1fr) .95fr;gap:38px;align-items:start}.footer-brand img{width:220px;max-width:100%;height:auto;display:block;margin-bottom:15px;border-radius:0}.footer-brand p{color:#999;max-width:300px;margin:0 0 18px;font-size:13px}.footer-col h3{font-size:13px;color:#f7c84d;margin:0 0 13px;font-weight:800}.footer-col a{display:block;color:#aaa;font-size:13px;margin:0 0 9px}.footer-col a:hover{color:#fff}.footer-download .store{display:block;border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:12px 14px;margin-bottom:10px;color:#ddd;font-weight:700;font-size:13px}.footer-bottom{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-top:28px;padding-top:20px;border-top:1px solid var(--line);color:#777;font-size:12px}@media(max-width:950px){.footer-grid{grid-template-columns:1.2fr 1fr 1fr}.footer-download{grid-column:2}}@media(max-width:560px){.footer-grid{grid-template-columns:1fr 1fr}.footer-brand{grid-column:1/-1}.footer-download{grid-column:auto}.footer-bottom{flex-direction:column;align-items:flex-start}}'''
+          s=s.replace('</style>',css+'</style>',1)
+          footer='''<footer><div class="wrap"><div class="footer-grid"><div class="footer-brand"><img src="logo-cropped.png" alt="STall — That's All"><p>STall connects you with local businesses and services around you. Discover. Connect. Grow.</p></div><div class="footer-col"><h3>Company</h3><a href="About.html">About Us</a><a href="#what-we-do">What We Do</a><a href="#offer">What We Offer</a><a href="#why">Why STall</a><a href="contact.html">Contact Us</a></div><div class="footer-col"><h3>For Businesses</h3><a href="register.html">List Your Business Free</a><a href="https://stallapp.stallwale.in/">Claim Your Business</a><a href="https://stallapp.stallwale.in/">Business Login</a><a href="#partner">Partner With Us</a></div><div class="footer-col"><h3>Support</h3><a href="help.html">Help Center</a><a href="faq.html">FAQs</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="contact.html">Contact Us</a></div><div class="footer-col footer-download"><h3>Explore</h3><a class="store" href="index.html">Discover Businesses</a><a class="store" href="upgrade.html">Explore Plans</a><a class="store" href="https://stallapp.stallwale.in/">Open STall App</a></div></div><div class="footer-bottom"><div>© 2026 STall Inc. All rights reserved.</div><div>Built for local commerce, everywhere.</div></div></div></footer><!-- STALL-FOOTER-LOGO-V1 -->'''
+          s=re.sub(r'<footer>.*?</footer>',footer,s,count=1,flags=re.S)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add business-growth.html
+          git diff --cached --quiet || git commit -m "Use approved STall logo and complete business footer"
+          git push
