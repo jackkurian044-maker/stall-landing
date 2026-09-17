@@ -16,22 +16,31 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Restore approved logo-cropped.png
+      - name: Install exact uploaded logo
         run: |
           set -e
-          git cat-file -e a7042ec2a17178e9ad344099fd3082f36dbc353b
-          git cat-file blob a7042ec2a17178e9ad344099fd3082f36dbc353b > logo-cropped.png
+          test -s assets/stall-logo-exact.jpg
+          base64 -d assets/stall-logo-exact.jpg > /tmp/stall-logo-exact.jpg
+          mv /tmp/stall-logo-exact.jpg assets/stall-logo-exact.jpg
+          rm -f assets/stall-logo-exact.txt
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('business-growth.html')
+          s = p.read_text()
+          s2 = s.replace('logo-cropped.png', 'assets/stall-logo-exact.jpg')
+          if s == s2:
+              raise SystemExit('business-growth.html logo reference not found')
+          p.write_text(s2)
+          PY
+          file assets/stall-logo-exact.jpg
           git status --short
 
-      - name: Commit logo only
+      - name: Commit exact logo change only
         run: |
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add logo-cropped.png
-          if git diff --cached --quiet; then
-            echo "Approved logo already restored; no changes needed."
-            exit 0
-          fi
-          git commit -m "Restore approved STall logo"
+          git add business-growth.html assets/stall-logo-exact.jpg assets/stall-logo-exact.txt
+          git diff --cached --stat
+          git commit -m "Use exact STall logo on business growth page"
           git push
