@@ -1,0 +1,9 @@
+name: Force Pages Redeploy
+on:
+  push:
+    branches: [main]
+jobs:
+  redeploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Pages redeploy triggered by logo update"
