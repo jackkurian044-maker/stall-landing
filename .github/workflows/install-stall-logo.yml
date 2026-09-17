@@ -1,0 +1,36 @@
+name: Install STall logo family asset
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/logo-parts/logo_s*.txt'
+      - '.github/workflows/install-stall-logo.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  install-logo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Assemble and install logo
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .github/logo-parts/logo_s1.txt \
+              .github/logo-parts/logo_s2.txt \
+              .github/logo-parts/logo_s3.txt \
+              .github/logo-parts/logo_s4.txt | base64 -d > logo-cropped.png
+          file logo-cropped.png
+          rm -rf .github/logo-parts
+          rm -f .github/workflows/install-stall-logo.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add logo-cropped.png
+          git add -u .github/logo-parts .github/workflows/install-stall-logo.yml || true
+          git commit -m 'Update STall logo to approved logo family asset' || exit 0
+          git push
