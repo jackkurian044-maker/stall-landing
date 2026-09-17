@@ -1,0 +1,38 @@
+name: Apply STall logo family
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-stall-logo-family.yml'
+      - 'business-growth.html'
+      - 'stall-logo-family.svg'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply logo only
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -q 'STALL-LOGO-FAMILY-V2' business-growth.html; then exit 0; fi
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('business-growth.html')
+          s=p.read_text()
+          s=s.replace('logo-cropped.png','stall-logo-family.svg')
+          s=s.replace('.brand img{width:48px;height:48px;object-fit:contain;border-radius:12px}', '.brand img{width:160px;height:64px;object-fit:contain;border-radius:0}')
+          s=s.replace('.brand span{font-family:Poppins,sans-serif;font-size:18px}', '.brand span{display:none}')
+          s=s.replace('.brand img{width:42px;height:42px}', '.brand img{width:140px;height:56px}')
+          s=s.replace('<body>', '<body>\n<!-- STALL-LOGO-FAMILY-V2 -->', 1)
+          p.write_text(s)
+          PY
+          rm -f .github/workflows/apply-stall-logo-family.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add business-growth.html stall-logo-family.svg
+          git add -u .github/workflows/apply-stall-logo-family.yml || true
+          git commit -m 'Use clean STall logo family on business page' || exit 0
+          git push
