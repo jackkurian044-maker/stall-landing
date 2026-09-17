@@ -1,0 +1,55 @@
+name: Remove partner WhatsApp CTA
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: "!contains(github.event.head_commit.message, 'Remove partner WhatsApp CTA')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Patch partner CTA
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          p = Path('business-growth.html')
+          s = p.read_text(encoding='utf-8')
+          marker = '<!-- STALL-PARTNER-WHATSAPP-REMOVED -->'
+          if marker in s:
+              raise SystemExit(0)
+
+          start = s.find('<section class="section" id="partner">')
+          if start < 0:
+              raise SystemExit('Partner section not found')
+          end = s.find('</section>', start)
+          if end < 0:
+              raise SystemExit('Partner section end not found')
+          end += len('</section>')
+          section = s[start:end]
+
+          pattern = r'<a[^>]*class="[^"]*btn[^\"]*"[^>]*>\s*(?:💬\s*)?WhatsApp to connect\s*</a>'
+          replacement = '<a class="btn primary" href="#contact">Partner With Us <span aria-hidden="true">→</span></a>'
+          patched, n = re.subn(pattern, replacement, section, count=1)
+          if n != 1:
+              raise SystemExit('Expected one WhatsApp CTA in partner section')
+
+          patched += marker
+          s = s[:start] + patched + s[end:]
+          p.write_text(s, encoding='utf-8')
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add business-growth.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Remove partner WhatsApp CTA"
+          git push
