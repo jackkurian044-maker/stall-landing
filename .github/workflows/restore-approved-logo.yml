@@ -1,0 +1,37 @@
+name: Restore approved STall logo
+
+on:
+  push:
+    paths:
+      - '.github/workflows/restore-approved-logo.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Restore approved logo-cropped.png
+        run: |
+          set -e
+          git cat-file -e a7042ec2a17178e9ad344099fd3082f36dbc353b
+          git cat-file blob a7042ec2a17178e9ad344099fd3082f36dbc353b > logo-cropped.png
+          git status --short
+
+      - name: Commit logo only
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add logo-cropped.png
+          if git diff --cached --quiet; then
+            echo "Approved logo already restored; no changes needed."
+            exit 0
+          fi
+          git commit -m "Restore approved STall logo"
+          git push
