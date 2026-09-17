@@ -1,0 +1,43 @@
+name: STall Business Growth Design
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  polish:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply approved STall contact and logo changes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('business-growth.html')
+          s=p.read_text(encoding='utf-8')
+          if '<!-- STALL-DESIGN-V2 -->' in s:
+              raise SystemExit(0)
+          s=s.replace('assets/logo.png','stall-logo.png')
+          s=s.replace('href="#contact">Talk to STall</a>','href="https://wa.me/918197018680?text=Hello%20STall%2C%20I%27d%20like%20to%20connect%20about%20STall.">💬 WhatsApp to connect</a>')
+          s=s.replace('.secondary{border:', '.whatsapp{background:#19c463!important;color:#fff!important;border:none!important;box-shadow:0 12px 35px rgba(25,196,99,.15)}.secondary{border:')
+          start=s.find('<section class="section alt" id="contact">')
+          if start!=-1:
+              end=s.find('</section>',start)
+              if end!=-1:
+                  end += len('</section>')
+                  contact='''<section class="section alt" id="contact"><div class="wrap"><div class="contact-box"><div><div class="kicker">Connect With Us</div><h2>Let’s connect on WhatsApp.</h2><p style="color:#aaa;max-width:650px">Have a question, suggestion, partnership idea or need help with your STall listing? Connect with us directly on WhatsApp.</p><div class="actions"><a class="btn primary whatsapp" href="https://wa.me/918197018680?text=Hello%20STall%2C%20I%27d%20like%20to%20connect%20about%20STall." target="_blank" rel="noopener">💬 WhatsApp to connect</a></div></div><div class="card"><div class="kicker">Quick Links</div><a class="contact-link" href="register.html"><strong>List Your Business Free</strong><span>Start your STall listing</span></a><a class="contact-link" href="https://stallapp.stallwale.in/"><strong>Claim Your Business</strong><span>Use your Claim ID in STall</span></a><a class="contact-link" href="upgrade.html"><strong>Explore Plans</strong><span>See additional STall capabilities</span></a><a class="contact-link" href="index.html"><strong>Discover Businesses</strong><span>Return to STall discovery</span></a></div></div></div></section>'''
+                  s=s[:start]+contact+s[end:]
+          s=re.sub(r'WhatsApp\s*:\s*\+?\d[\d\s-]{7,}', 'WhatsApp', s, flags=re.I)
+          s=s.replace('</body>', '<!-- STALL-DESIGN-V2 -->\n</body>', 1)
+          p.write_text(s,encoding='utf-8')
+          Path('assets/stall-logo-crisp.png').unlink(missing_ok=True)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add business-growth.html assets/stall-logo-crisp.png
+          git diff --cached --quiet || git commit -m "Apply approved STall business growth contact design"
+          git push
