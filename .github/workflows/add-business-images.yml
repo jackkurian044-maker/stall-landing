@@ -1,0 +1,45 @@
+name: Add STall business images
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  images:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add approved visual section
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('business-growth.html')
+          s = p.read_text(encoding='utf-8')
+          marker = '<!-- STALL-IMAGES-V1 -->'
+          if marker in s:
+              raise SystemExit(0)
+
+          css = '''\n.visual-strip{padding:18px 0 76px}.visual-strip-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.visual-main,.visual-stack article{position:relative;overflow:hidden;border-radius:24px;border:1px solid rgba(245,183,44,.22);background:#101010;min-height:250px}.visual-main{min-height:430px}.visual-main img,.visual-stack img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease;filter:saturate(.95)}.visual-main:hover img,.visual-stack article:hover img{transform:scale(1.035)}.visual-main:after,.visual-stack article:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 38%,rgba(0,0,0,.72) 100%)}.visual-copy{position:absolute;z-index:2;left:24px;right:24px;bottom:22px}.visual-copy .kicker{margin-bottom:7px}.visual-copy h3{font-family:Poppins,sans-serif;font-size:25px;margin:0 0 5px}.visual-copy p{margin:0;color:#d0d0d0;font-size:13px}.visual-stack{display:grid;grid-template-rows:1fr 1fr;gap:18px}.visual-stack article{min-height:206px}.visual-credit{margin-top:10px;color:#777;font-size:10px}.visual-credit a{color:#999;text-decoration:underline}@media(max-width:950px){.visual-strip-grid{grid-template-columns:1fr}.visual-main{min-height:330px}.visual-stack{grid-template-columns:1fr 1fr;grid-template-rows:none}.visual-stack article{min-height:220px}}@media(max-width:560px){.visual-strip{padding:5px 0 55px}.visual-stack{grid-template-columns:1fr}.visual-main{min-height:300px}.visual-stack article{min-height:220px}.visual-copy{left:18px;right:18px;bottom:17px}}\n'''
+          if '.visual-strip{' not in s:
+              s = s.replace('</style>', css + '</style>', 1)
+
+          visual = '''\n<!-- STALL-IMAGES-V1 -->\n<section class="visual-strip"><div class="wrap"><div class="visual-strip-grid">\n  <article class="visual-main"><img src="https://images.unsplash.com/photo-1753184863498-72e77c60888b?auto=format&fit=crop&fm=jpg&q=78&w=1800" alt="Local Indian shop owner and neighbourhood store" loading="lazy"><div class="visual-copy"><div class="kicker">Local businesses</div><h3>Real businesses. Real neighbourhoods.</h3><p>STall is built around the people and places that make every local area unique.</p></div></article>\n  <div class="visual-stack">\n    <article><img src="https://images.unsplash.com/photo-1751956066306-c5684cbcf385?auto=format&fit=crop&fm=jpg&q=78&w=1400" alt="Indian cafe interior and local business" loading="lazy"><div class="visual-copy"><div class="kicker">Discover</div><h3>Find what is around you.</h3></div></article>\n    <article><img src="https://images.unsplash.com/photo-1747833305853-d43937d88971?auto=format&fit=crop&fm=jpg&q=78&w=1400" alt="Barbershop and local service business" loading="lazy"><div class="visual-copy"><div class="kicker">Connect</div><h3>Connect with businesses you trust.</h3></div></article>\n  </div>\n</div><div class="visual-credit">Photography via <a href="https://unsplash.com/" target="_blank" rel="noopener">Unsplash</a>.</div></div></section>\n'''
+
+          hero_end = s.find('</section>', s.find('<section class="hero"'))
+          if hero_end == -1:
+              raise SystemExit('Hero section not found')
+          hero_end += len('</section>')
+          s = s[:hero_end] + visual + s[hero_end:]
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit image section
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add business-growth.html
+          git commit -m "Add visual business imagery to STall growth page"
+          rm -f .github/workflows/add-business-images.yml
+          git add .github/workflows/add-business-images.yml
+          git commit -m "Remove one-time business images workflow"
+          git push
