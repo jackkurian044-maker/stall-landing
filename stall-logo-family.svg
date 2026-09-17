@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 720" role="img" aria-labelledby="title desc">
+<title id="title">STall — THAT'S ALL</title>
+<desc id="desc">Gold shield ST logo with white all lettering and THAT'S ALL tagline.</desc>
+<rect width="900" height="720" rx="28" fill="#050505"/>
+<g transform="translate(120 55)">
+  <path d="M0 88 L270 0 L540 88 L500 365 Q470 485 270 590 Q70 485 40 365 Z" fill="#050505" stroke="#f5b72c" stroke-width="20"/>
+  <path d="M22 98 L270 20 L518 98" fill="none" stroke="#ffd447" stroke-width="10"/>
+  <text x="92" y="285" font-family="Georgia,Times New Roman,serif" font-size="230" font-weight="700" fill="#fff">S</text>
+  <text x="245" y="285" font-family="Georgia,Times New Roman,serif" font-size="220" font-weight="700" fill="#f5b72c">T</text>
+  <path d="M270 360 l16 28 31 16-31 16-16 30-16-30-31-16 31-16z" fill="#f5b72c"/>
+  <text x="535" y="305" font-family="Arial,Helvetica,sans-serif" font-size="185" font-weight="700" fill="#fff">all</text>
+</g>
+<g fill="#fff" font-family="Arial,Helvetica,sans-serif" font-size="55" letter-spacing="13">
+  <text x="180" y="650">THAT’S ALL</text>
+</g>
+<rect x="62" y="626" width="115" height="8" fill="#f5b72c"/>
+<rect x="723" y="626" width="115" height="8" fill="#f5b72c"/>
+</svg>
