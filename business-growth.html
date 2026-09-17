@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080808">
+  <meta name="description" content="Get your business discovered on STall. List your business free, claim an existing listing, manage your presence and grow your local visibility.">
+  <title>Grow Your Business on STall</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#070707;--panel:#101010;--panel2:#151515;--gold:#f5b72c;--gold2:#ffd86a;--text:#fff;--muted:#a7a7a7;--line:rgba(255,255,255,.1);--max:1160px}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:radial-gradient(circle at 80% 0%,rgba(245,183,44,.1),transparent 32%),var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;line-height:1.55}
+    a{color:inherit;text-decoration:none}
+    .wrap{width:min(calc(100% - 36px),var(--max));margin:auto}
+    .nav{position:sticky;top:0;z-index:20;background:rgba(7,7,7,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    .navin{min-height:74px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:.2px}
+    .brand img{width:48px;height:48px;object-fit:contain;border-radius:12px}
+    .brand span{font-family:Poppins,sans-serif;font-size:18px}
+    .navlinks{display:flex;align-items:center;gap:24px;color:#c8c8c8;font-size:14px}
+    .navlinks a:hover{color:#fff}
+    .navcta{padding:11px 16px;border:1px solid rgba(245,183,44,.65);border-radius:999px;color:#ffd76a;font-weight:700}
+    .hero{padding:72px 0 58px}
+    .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:56px}
+    .eyebrow{display:inline-flex;align-items:center;gap:9px;padding:7px 12px;border:1px solid rgba(245,183,44,.35);border-radius:999px;color:#ffd76a;background:rgba(245,183,44,.07);font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase}
+    .eyebrow i{width:7px;height:7px;background:var(--gold);border-radius:50%;display:block}
+    h1{font-family:Poppins,sans-serif;font-size:clamp(38px,5.5vw,70px);line-height:1.03;letter-spacing:-2px;margin:20px 0 18px;max-width:780px}
+    h1 em{font-style:normal;color:var(--gold2)}
+    .lead{font-size:18px;color:#c7c7c7;max-width:690px;margin:0 0 28px}
+    .actions{display:flex;flex-wrap:wrap;gap:12px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 21px;border-radius:12px;font-weight:800;font-size:14px;transition:transform .18s ease,box-shadow .18s ease,background .18s ease}
+    .btn:hover{transform:translateY(-2px)}
+    .primary{background:linear-gradient(135deg,#ffd968,#e9a915);color:#090909;box-shadow:0 12px 35px rgba(245,183,44,.18)}
+    .secondary{border:1px solid rgba(255,255,255,.2);background:#111;color:#fff}
+    .micro{font-size:12px;color:#858585;margin-top:13px}
+    .logo-card{position:relative;background:linear-gradient(145deg,#121212,#080808);border:1px solid rgba(245,183,44,.25);border-radius:28px;padding:30px;box-shadow:0 30px 80px rgba(0,0,0,.5);overflow:hidden}
+    .logo-card:before{content:"";position:absolute;width:240px;height:240px;border-radius:50%;background:rgba(245,183,44,.1);filter:blur(40px);top:-90px;right:-80px}
+    .logo-card img{position:relative;width:100%;max-width:430px;display:block;margin:auto;border-radius:20px}
+    .section{padding:76px 0}
+    .section-head{max-width:720px;margin-bottom:30px}
+    .kicker{color:#f7c84d;font-size:12px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase}
+    h2{font-family:Poppins,sans-serif;font-size:clamp(28px,4vw,46px);line-height:1.1;margin:9px 0 12px;letter-spacing:-1px}
+    .section-head p{color:#aaa;margin:0;font-size:16px}
+    .owner-box{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .card{background:linear-gradient(145deg,#121212,#0c0c0c);border:1px solid var(--line);border-radius:20px;padding:28px}
+    .card h3{font-family:Poppins,sans-serif;font-size:22px;margin:0 0 9px}
+    .card p{color:#aaa;margin:0 0 20px}
+    .card .icon{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:rgba(245,183,44,.1);border:1px solid rgba(245,183,44,.25);color:#ffd45d;font-size:20px;margin-bottom:17px}
+    .journey{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+    .step{position:relative;text-align:center;background:#0f0f0f;border:1px solid var(--line);border-radius:16px;padding:22px 12px;min-height:132px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .step strong{font-size:14px;margin-top:9px}.step span{font-size:11px;color:#777;margin-top:4px}.num{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#191919;border:1px solid rgba(245,183,44,.4);color:#ffd45d;font-weight:800;font-size:12px}
+    .plans{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .plan{border:1px solid var(--line);background:#101010;border-radius:22px;padding:30px}
+    .plan.featured{border-color:rgba(245,183,44,.5);box-shadow:0 20px 60px rgba(245,183,44,.07)}
+    .plan-tag{display:inline-block;font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:#ffd45d;margin-bottom:10px}
+    .plan h3{font-family:Poppins,sans-serif;font-size:26px;margin:0 0 6px}.plan p{color:#999;margin:0 0 20px}
+    .plan ul{padding:0;margin:0 0 25px;list-style:none}.plan li{padding:8px 0;color:#d5d5d5;font-size:14px}.plan li:before{content:"✓";color:#f7c84d;font-weight:800;margin-right:9px}
+    .wide-cta{padding:42px;border:1px solid rgba(245,183,44,.28);border-radius:26px;background:radial-gradient(circle at 85% 20%,rgba(245,183,44,.13),transparent 35%),#101010;display:flex;align-items:center;justify-content:space-between;gap:28px}
+    .wide-cta h2{margin:0 0 8px}.wide-cta p{margin:0;color:#aaa;max-width:650px}
+    footer{border-top:1px solid var(--line);padding:28px 0 38px;color:#777;font-size:12px}.foot{display:flex;justify-content:space-between;gap:15px;align-items:center}.powered{color:#bbb}.powered b{color:#f7c84d}
+    @media(max-width:850px){.hero{padding-top:45px}.hero-grid,.owner-box,.plans{grid-template-columns:1fr}.journey{grid-template-columns:1fr 1fr}.logo-card{order:-1}.navlinks a:not(.navcta){display:none}.wide-cta{flex-direction:column;align-items:flex-start}}
+    @media(max-width:520px){.wrap{width:min(calc(100% - 24px),var(--max))}.navin{min-height:66px}.brand img{width:42px;height:42px}.brand span{font-size:16px}.hero{padding:35px 0 45px}h1{letter-spacing:-1.3px}.lead{font-size:16px}.actions .btn{width:100%}.section{padding:55px 0}.card,.plan{padding:23px}.journey{grid-template-columns:1fr}.step{min-height:105px}.wide-cta{padding:27px}.foot{flex-direction:column;align-items:flex-start}}
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap navin">
+      <a class="brand" href="index.html" aria-label="STall home">
+        <img src="assets/logo.png" alt="STall logo">
+        <span>STall</span>
+      </a>
+      <nav class="navlinks" aria-label="Page navigation">
+        <a href="#how">How it works</a>
+        <a href="#plans">Plans</a>
+        <a class="navcta" href="register.html">List Free</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow"><i></i> For local business owners</div>
+          <h1>Your business should be <em>on STall.</em></h1>
+          <p class="lead">Your customers are already looking for businesses like yours. Get discovered locally, showcase what you offer, manage your presence and build a stronger connection with customers.</p>
+          <div class="actions">
+            <a class="btn primary" href="register.html">List Your Business Free</a>
+            <a class="btn secondary" href="https://stallapp.stallwale.in/">Already Listed? Claim Your Business</a>
+          </div>
+          <div class="micro">Free listing available • No commission • Claim an existing listing with your Claim ID</div>
+        </div>
+        <div class="logo-card">
+          <img src="assets/logo.png" alt="STall — Discover, Connect, Grow">
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="how">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="kicker">Why STall</div>
+          <h2>From discovery to reputation.</h2>
+          <p>STall connects local customers with businesses and gives business owners a place to build and manage their local presence.</p>
+        </div>
+        <div class="owner-box">
+          <article class="card">
+            <div class="icon">⌖</div>
+            <h3>Get discovered</h3>
+            <p>Put your business where local customers are searching. Keep your business information available in one place and make it easier for people nearby to find you.</p>
+            <a class="btn secondary" href="register.html">Get Listed Free</a>
+          </article>
+          <article class="card">
+            <div class="icon">✓</div>
+            <h3>Take control</h3>
+            <p>If STall has already created a listing for your business, use your Claim ID to claim it and take control of the listing instead of creating a duplicate.</p>
+            <a class="btn secondary" href="https://stallapp.stallwale.in/">Claim Your Listing</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="kicker">The STall journey</div>
+          <h2>One local presence. More ways to grow.</h2>
+          <p>Customers discover businesses. Businesses build their presence. The ecosystem keeps moving.</p>
+        </div>
+        <div class="journey" aria-label="STall journey">
+          <div class="step"><div class="num">1</div><strong>Get Listed</strong><span>Start with your business</span></div>
+          <div class="step"><div class="num">2</div><strong>Get Discovered</strong><span>Reach local customers</span></div>
+          <div class="step"><div class="num">3</div><strong>Collect Reviews</strong><span>Build customer trust</span></div>
+          <div class="step"><div class="num">4</div><strong>Respond Professionally</strong><span>Stay connected</span></div>
+          <div class="step"><div class="num">5</div><strong>Grow Your Presence</strong><span>Add tools when ready</span></div>
+        </div>
+        <p style="color:#777;font-size:13px;margin:18px 0 0">Powered by STall helps businesses manage their digital presence while helping customers discover local businesses.</p>
+      </div>
+    </section>
+
+    <section class="section" id="plans">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="kicker">Start simple</div>
+          <h2>Start Free. Grow When You’re Ready.</h2>
+          <p>Begin with a free listing and explore additional STall capabilities when your business is ready for more.</p>
+        </div>
+        <div class="plans">
+          <article class="plan">
+            <div class="plan-tag">Free</div>
+            <h3>Get on STall</h3>
+            <p>A simple way to establish your local presence.</p>
+            <ul>
+              <li>Business listing</li>
+              <li>Basic business information</li>
+              <li>Local discovery</li>
+              <li>Claim your listing</li>
+            </ul>
+            <a class="btn primary" href="register.html">List Your Business Free</a>
+          </article>
+          <article class="plan featured">
+            <div class="plan-tag">Paid plans</div>
+            <h3>Grow Your Presence</h3>
+            <p>Explore enhanced visibility and additional business tools.</p>
+            <ul>
+              <li>Enhanced business presence</li>
+              <li>More visibility and features</li>
+              <li>Review management</li>
+              <li>Offers and additional business tools</li>
+            </ul>
+            <a class="btn secondary" href="upgrade.html">Explore STall Plans</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:10px">
+      <div class="wrap">
+        <div class="wide-cta">
+          <div>
+            <div class="kicker">Already listed?</div>
+            <h2>Claim your business and take control.</h2>
+            <p>If an STall admin has already added your business, sign in to STall and use your Claim ID to claim the listing. You can then manage the business information from your owner dashboard.</p>
+          </div>
+          <a class="btn primary" href="https://stallapp.stallwale.in/">Open STall &amp; Claim</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <div>© STall • Discover local. Connect locally.</div>
+      <div class="powered">Powered by <b>STall</b></div>
+    </div>
+  </footer>
+</body>
+</html>
