@@ -14,7 +14,16 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github.raw+json" "https://api.github.com/repos/${{ github.repository }}/contents/stall-digital-score.html?ref=74bcf33d46cd5c33ec14dbea52846d5e648b7cc3" -o stall-digital-score.html
+          python - <<'PY'
+          import json, base64, urllib.request
+          url="https://api.github.com/repos/${{ github.repository }}/contents/stall-digital-score.html?ref=74bcf33d46cd5c33ec14dbea52846d5e648b7cc3"
+          req=urllib.request.Request(url,headers={"Authorization":"Bearer "+__import__("os").environ["GH_TOKEN"],"Accept":"application/vnd.github+json"})
+          with urllib.request.urlopen(req) as r:
+              obj=json.load(r)
+          data=obj.get("content","").replace("\\n","")
+          if not data: raise SystemExit("Could not retrieve approved Digital Score source")
+          open("stall-digital-score.html","wb").write(base64.b64decode(data))
+          PY
       - name: Inline supplied STall logo
         run: |
           python - <<'PY'
