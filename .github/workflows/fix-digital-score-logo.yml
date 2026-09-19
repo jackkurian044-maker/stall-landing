@@ -21,7 +21,7 @@ jobs:
               raise SystemExit('stall-logo.png is missing')
           data='data:image/png;base64,'+base64.b64encode(logo.read_bytes()).decode('ascii')
           s=page.read_text(encoding='utf-8')
-          s=re.sub(r'<img([^>]*?)src="(?:\\./)?(?:/)?stall-logo\\.(?:webp|png)(?:\\?[^"]*)?"([^>]*)>',
+          s=re.sub(r'<img([^>]*?)src="(?:\\./)?(?:/)?stall-logo\.(?:webp|png)(?:\?[^"]*)?"([^>]*)>',
                    lambda m:'<img'+m.group(1)+'src="'+data+'"'+m.group(2)+'>', s)
           page.write_text(s,encoding='utf-8')
           PY
