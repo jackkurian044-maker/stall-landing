@@ -486,11 +486,7 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
           <li>WhatsApp enquiries</li>
           <li>Business insights</li>
         </ul>
-        <div class="razorpay-wrap card-btn">
-          <form>
-            <script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_TakQddcqxbkshT" async></script>
-          </form>
-        </div>
+        <a class="btn card-btn btn-ghost" data-plan-link="verified" href="https://stallapp.stallwale.in/?upgrade=1&plan=verified">Get STall Verified — ₹99</a>
       </article>
 
       <article class="card">
@@ -506,7 +502,7 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
           <li>Growth action plan</li>
           <li>Free STall Landing Page</li>
         </ul>
-        <a class="btn card-btn btn-ghost" href="https://rzp.io/rzp/4TjcN9A" target="_blank" rel="noopener">Get Digital Growth — ₹499</a>
+        <a class="btn card-btn btn-ghost" data-plan-link="digital_growth" href="https://stallapp.stallwale.in/?upgrade=1&plan=digital_growth">Get Digital Growth — ₹499</a>
       </article>
 
       <article class="card">
@@ -523,7 +519,7 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
           <li>STall CTA Page for Orders & Bookings</li>
           <li>Growth recommendations</li>
         </ul>
-        <a class="btn card-btn btn-ghost" href="https://rzp.io/rzp/E5Lkiiw" target="_blank" rel="noopener">Get Growth Setup — ₹999</a>
+        <a class="btn card-btn btn-ghost" data-plan-link="growth_setup" href="https://stallapp.stallwale.in/?upgrade=1&plan=growth_setup">Get Growth Setup — ₹999</a>
       </article>
     </div>
 
@@ -628,6 +624,25 @@ document.querySelectorAll('.faq-q').forEach(btn=>{
     btn.parentElement.classList.toggle('open');
   });
 });
+</script>
+
+<script>
+(function(){
+  try{
+    var q=new URLSearchParams(window.location.search);
+    var passthrough="";
+    ["id","claim","new"].forEach(function(k){
+      var v=q.get(k);
+      if(v) passthrough += "&" + encodeURIComponent(k) + "=" + encodeURIComponent(v);
+    });
+    document.querySelectorAll("[data-plan-link]").forEach(function(a){
+      var plan=a.getAttribute("data-plan-link");
+      a.href="https://stallapp.stallwale.in/?upgrade=1&plan="+encodeURIComponent(plan)+passthrough;
+      a.removeAttribute("target");
+      a.removeAttribute("rel");
+    });
+  }catch(e){ console.error("STall plan routing:",e); }
+})();
 </script>
 
 <script>
