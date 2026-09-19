@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="STall Digital Score — a free digital presence check for local businesses.">
+<title>STall Digital Score</title>
+<style>
+:root{--bg:#07111f;--card:#0d1b2e;--muted:#9fb0c7;--text:#f7fbff;--line:#20334c;--accent:#69e6a8;--accent2:#72b7ff;--danger:#ff8f8f}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#07111f,#0a1525 60%,#07111f);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}a{color:inherit}.wrap{max-width:1050px;margin:auto;padding:24px}.nav{display:flex;justify-content:space-between;align-items:center;gap:16px}.brand{font-weight:900;font-size:24px}.brand span{color:var(--accent)}.pill{border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--muted);font-size:13px}.hero{text-align:center;padding:64px 12px 34px}.eyebrow{color:var(--accent);font-weight:800;letter-spacing:.12em;font-size:12px}.hero h1{font-size:clamp(38px,7vw,72px);line-height:.98;margin:14px 0}.hero p{max-width:680px;margin:0 auto;color:var(--muted);font-size:18px;line-height:1.6}.box{margin:28px auto;max-width:780px;background:rgba(13,27,46,.88);border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 20px 60px #0005}.form{display:flex;gap:10px}.form input{flex:1;min-width:0;background:#07111f;border:1px solid var(--line);color:var(--text);padding:16px;border-radius:13px;font-size:16px}.btn{border:0;border-radius:13px;padding:14px 18px;font-weight:800;cursor:pointer;background:var(--accent);color:#062016}.btn.secondary{background:#12243a;color:var(--text);border:1px solid var(--line)}.btn:disabled{opacity:.5;cursor:not-allowed}.hint{color:var(--muted);font-size:13px;margin:12px 4px 0}.status{margin-top:14px;color:var(--muted);min-height:22px}.error{color:var(--danger)}.result{display:none}.scoreCard{display:grid;grid-template-columns:180px 1fr;gap:22px;align-items:center}.score{width:160px;height:160px;border:8px solid var(--accent);border-radius:50%;display:flex;flex-direction:column;justify-content:center;align-items:center}.score strong{font-size:48px;line-height:1}.score small{color:var(--muted)}.result h2{margin:0 0 8px}.grade{color:var(--accent2);font-weight:800}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:20px}.cat{background:#09172a;border:1px solid var(--line);border-radius:15px;padding:15px}.catTop{display:flex;justify-content:space-between;gap:10px}.bar{height:7px;background:#17283d;border-radius:99px;margin-top:12px;overflow:hidden}.bar i{display:block;height:100%;background:var(--accent);border-radius:99px}.business{margin-top:20px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);line-height:1.6}.plans{margin:60px 0}.plans h2{text-align:center}.planGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}.plan{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}.plan h3{margin:0}.price{font-size:30px;font-weight:900;margin:10px 0}.plan p{color:var(--muted);min-height:44px}.footer{text-align:center;color:var(--muted);padding:30px 0 50px;font-size:13px}@media(max-width:700px){.form,.scoreCard{display:block}.form .btn{width:100%;margin-top:10px}.score{margin:0 auto 20px}.grid,.planGrid{grid-template-columns:1fr}.hero{padding-top:40px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="nav"><div class="brand">ST<span>all</span></div><div class="pill">Find what’s around you.</div></header>
+<section class="hero">
+<div class="eyebrow">FREE BUSINESS CHECK</div>
+<h1>STall Digital Score</h1>
+<p>See how your business appears on Google and identify the digital presence gaps that can affect local discovery and enquiries.</p>
+</section>
+<section class="box">
+<div class="form"><input id="profile" type="url" placeholder="Paste your Google Maps / Business Profile link"><button class="btn" id="check">Check My Score</button></div>
+<div class="hint">Use Google Maps → Share → Copy link. You can also paste a Google Business Profile link.</div>
+<div class="status" id="status"></div>
+</section>
+<section class="box result" id="result">
+<div class="scoreCard">
+<div class="score"><strong id="score">0</strong><small>/ 100</small></div>
+<div><h2 id="businessName">Your Business</h2><div class="grade" id="grade"></div><p id="gap" class="hint"></p></div>
+</div>
+<div class="grid" id="categories"></div>
+<div class="business" id="business"></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px"><button class="btn" data-plan="verified">Get STall Verified — ₹99</button><button class="btn secondary" data-plan="digital_growth">Digital Growth — ₹499/month</button><button class="btn secondary" data-plan="growth_setup">Growth Setup — ₹999/month</button></div>
+</section>
+<section class="plans">
+<h2>Turn your score into action</h2>
+<div class="planGrid">
+<div class="plan"><h3>STall Verified</h3><div class="price">₹99</div><p>Verified presence, enhanced local visibility, WhatsApp enquiries and insights.</p></div>
+<div class="plan"><h3>Digital Growth</h3><div class="price">₹499<span style="font-size:14px">/month</span></div><p>Digital audit, Google review, conversion assessment, action plan and landing page.</p></div>
+<div class="plan"><h3>Growth Setup</h3><div class="price">₹999<span style="font-size:14px">/month</span></div><p>Profile optimisation, review response setup, WhatsApp conversion, offers and CTA page.</p></div>
+</div>
+</section>
+<footer class="footer">Your business always stays yours. You remain in control while STall helps you build your presence and reach more customers.</footer>
+</div>
+<script>
+const FN="https://dhiimviybpbggvuuzwfh.supabase.co/functions/v1/public-business-audit";
+const statusEl=document.getElementById("status"),result=document.getElementById("result");
+function setStatus(t,error=false){statusEl.textContent=t;statusEl.className="status"+(error?" error":"")}
+function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
+async function audit(){
+ const input=document.getElementById("profile").value.trim();
+ if(input.length<3){setStatus("Please paste your Google Maps / Business Profile link.",true);return}
+ const btn=document.getElementById("check");btn.disabled=true;setStatus("Checking your Google presence…");result.style.display="none";
+ try{
+  const r=await fetch(FN,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({profile:input})});
+  const d=await r.json();if(!r.ok)throw new Error(d?.error||"Unable to complete the score.");
+  document.getElementById("score").textContent=d.audit?.score??0;
+  document.getElementById("businessName").textContent=d.place?.name||"Your Business";
+  document.getElementById("grade").textContent=d.audit?.grade||"";
+  document.getElementById("gap").textContent=d.audit?.gap?"Biggest current gap: "+d.audit.gap:"";
+  document.getElementById("categories").innerHTML=(d.audit?.categories||[]).map(c=>{const pct=Math.max(0,Math.min(100,Number(c.score)/Number(c.max)*100));return '<div class="cat"><div class="catTop"><strong>'+escapeHtml(c.name)+'</strong><span>'+Math.round(c.score)+'/'+c.max+'</span></div><div class="bar"><i style="width:'+pct+'%"></i></div></div>'}).join("");
+  const p=d.place||{};const bits=[p.address,p.phone,p.website?'<a href="'+escapeHtml(p.website)+'" target="_blank" rel="noopener">Website</a>':"",p.rating?("Google rating: "+p.rating+" ("+(p.reviews||0)+" reviews)"): "",p.maps_url?'<a href="'+escapeHtml(p.maps_url)+'" target="_blank" rel="noopener">Open on Google Maps</a>':""].filter(Boolean);
+  document.getElementById("business").innerHTML=bits.join(" · ");
+  result.style.display="block";setStatus("Score ready.");
+  result.scrollIntoView({behavior:"smooth",block:"start"});
+ }catch(e){setStatus(e?.message||"Unable to complete the score.",true)}
+ finally{btn.disabled=false}
+}
+document.getElementById("check").addEventListener("click",audit);
+document.getElementById("profile").addEventListener("keydown",e=>{if(e.key==="Enter")audit()});
+document.querySelectorAll("[data-plan]").forEach(b=>b.addEventListener("click",()=>{
+ const plan=b.dataset.plan;
+ window.location.href="https://stallapp.stallwale.in/?upgrade=1&plan="+encodeURIComponent(plan);
+}));
+</script>
+</body>
+</html>
