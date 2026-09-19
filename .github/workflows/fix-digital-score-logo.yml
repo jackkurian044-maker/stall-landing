@@ -13,4 +13,4 @@ jobs:
       - name: Validate exact logo asset
         run: |
           test -s stall-logo-exact.webp
-          grep -q 'stall-logo-exact.webp' stall-digital-score.html
+          grep -q 'data:image/webp;base64,' stall-digital-score.html
