@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Restore approved Digital Score page
         run: |
-          git checkout 14b8d5b0564c60a961aaa8db8f83aefceb9f6336 -- stall-digital-score.html
+          git show 14b8d5b0564c60a961aaa8db8f83aefceb9f6336:stall-digital-score.html > stall-digital-score.html
       - name: Inline supplied STall logo
         run: |
           python - <<'PY'
