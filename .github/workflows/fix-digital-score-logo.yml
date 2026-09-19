@@ -24,6 +24,10 @@ jobs:
           if not data: raise SystemExit("Could not retrieve approved Digital Score source")
           open("stall-digital-score.html","wb").write(base64.b64decode(data))
           PY
+      - name: Fetch exact STall product logo
+        run: |
+          curl -fsSL "https://raw.githubusercontent.com/jackkurian044-maker/Stall-App/de741a91ac5b7723eabc634b3ac0a0a1220f4a8b/src/stall-logo.png" -o stall-logo.png
+          test -s stall-logo.png
       - name: Inline supplied STall logo
         run: |
           python - <<'PY'
