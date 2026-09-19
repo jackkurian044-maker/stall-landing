@@ -12,5 +12,5 @@ jobs:
       - uses: actions/checkout@v4
       - name: Validate exact logo asset
         run: |
-          test -s logo-cropped.png
-          grep -q 'logo-cropped.png' stall-digital-score.html
+          test -s stall-logo-exact.webp
+          grep -q 'stall-logo-exact.webp' stall-digital-score.html
