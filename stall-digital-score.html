@@ -10,7 +10,7 @@
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:#fff}
 a{color:inherit}.wrap{width:min(1180px,calc(100% - 32px));margin:auto}
 .nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px;background:#fff}
-.logo{display:flex;align-items:center;text-decoration:none}.logo svg{width:132px;height:auto;display:block}
+.logo{display:flex;align-items:center;text-decoration:none}.logoImg{width:132px;height:78px;object-fit:contain;display:block}
 .navlinks{display:flex;gap:28px;font-size:14px;font-weight:700}.navlinks a{text-decoration:none}.navlinks a:hover{color:#b98000}
 .navcta,.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;background:var(--gold);color:#111;font-weight:900;cursor:pointer;text-decoration:none;transition:.2s transform,.2s box-shadow}
 .navcta{padding:12px 22px}.navcta:hover,.btn:hover{transform:translateY(-1px);box-shadow:0 10px 25px #c9972b33}
@@ -35,11 +35,11 @@ a{color:inherit}.wrap{width:min(1180px,calc(100% - 32px));margin:auto}
 </head>
 <body>
 <header class="nav wrap">
-<a class="logo" href="#"><svg viewBox="0 0 260 82" aria-label="STall logo" role="img">
+<a class="logo" href="#"><img src="/stall-logo.webp" alt="STall — That’s All" class="logoImg">
 <path d="M32 7 L68 24 L66 53 Q64 68 32 77 Q0 68 2 53 L0 24 Z" fill="#090909" stroke="#f2b51d" stroke-width="4"/>
 <text x="10" y="51" font-family="Georgia,serif" font-size="35" fill="#fff">S</text><text x="35" y="51" font-family="Georgia,serif" font-size="35" fill="#f2b51d">T</text><text x="73" y="58" font-family="Arial,sans-serif" font-size="43" font-weight="800" fill="#111">all</text>
 <text x="7" y="79" font-family="Arial,sans-serif" font-size="7" letter-spacing="3.5" fill="#111">THAT’S ALL</text>
-</svg></a>
+</a>
 <nav class="navlinks"><a href="#score">Score</a><a href="#why">Why STall</a><a href="#plans">Plans</a><a href="#contact">Contact</a></nav>
 <a class="navcta" href="#score">◉ Get Started</a>
 </header>
@@ -47,11 +47,7 @@ a{color:inherit}.wrap{width:min(1180px,calc(100% - 32px));margin:auto}
 <section class="hero">
 <div class="wrap heroInner">
 <div>
-<svg class="heroLogo" viewBox="0 0 520 160" aria-label="STall logo" role="img">
-<path d="M65 15 L140 50 L135 105 Q130 137 65 155 Q0 137 5 105 L0 50 Z" fill="#050505" stroke="#f2b51d" stroke-width="7"/>
-<text x="22" y="105" font-family="Georgia,serif" font-size="75" fill="#fff">S</text><text x="72" y="105" font-family="Georgia,serif" font-size="75" fill="#f2b51d">T</text><text x="160" y="120" font-family="Arial,sans-serif" font-size="92" font-weight="800" fill="#fff">all</text>
-<text x="10" y="153" font-family="Arial,sans-serif" font-size="10" letter-spacing="6" fill="#fff">THAT’S ALL</text>
-</svg>
+<img class="heroLogo" src="/stall-logo.webp" alt="STall — That’s All">
 <div class="eyebrow">DISCOVER • CONNECT • GROW</div>
 <h1><span>STall</span> Digital Score</h1>
 <p>Find out how visible your business is online and get a personalized growth plan.</p>
@@ -111,7 +107,7 @@ a{color:inherit}.wrap{width:min(1180px,calc(100% - 32px));margin:auto}
 
 <footer id="contact" class="footer">
 <div class="wrap footerInner">
-<div class="footerLogo"><svg viewBox="0 0 260 82" aria-label="STall logo" role="img"><path d="M32 7 L68 24 L66 53 Q64 68 32 77 Q0 68 2 53 L0 24 Z" fill="#050505" stroke="#f2b51d" stroke-width="4"/><text x="10" y="51" font-family="Georgia,serif" font-size="35" fill="#fff">S</text><text x="35" y="51" font-family="Georgia,serif" font-size="35" fill="#f2b51d">T</text><text x="73" y="58" font-family="Arial,sans-serif" font-size="43" font-weight="800" fill="#fff">all</text><text x="7" y="79" font-family="Arial,sans-serif" font-size="7" letter-spacing="3.5" fill="#fff">THAT’S ALL</text></svg></div>
+<div class="footerLogo"><img src="/stall-logo.webp" alt="STall — That’s All" class="logoImg"></div>
 <div class="footerMid"><div>Discover &nbsp; • &nbsp; Connect &nbsp; • &nbsp; Grow</div><div>Every Business Matters</div></div>
 <div id="contact" class="footerCta"><a class="btn" href="https://wa.me/918197018680" target="_blank" rel="noopener">◉ Talk to Us</a><small>We’re here to help!</small></div>
 </div>
