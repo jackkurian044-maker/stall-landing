@@ -11,8 +11,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Restore approved Digital Score page
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git show fa512b16d391681d8e6e342f702e64b57786f79e:stall-digital-score.html > stall-digital-score.html
+          curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github.raw+json" "https://api.github.com/repos/${{ github.repository }}/contents/stall-digital-score.html?ref=74bcf33d46cd5c33ec14dbea52846d5e648b7cc3" -o stall-digital-score.html
       - name: Inline supplied STall logo
         run: |
           python - <<'PY'
