@@ -152,16 +152,21 @@
 const FN="https://dhiimviybpbggvuuzwfh.supabase.co/functions/v1/public-business-audit";
 const statusEl=document.getElementById("status"),result=document.getElementById("result");
 let coords=null;
+const sessionId=(crypto&&crypto.randomUUID)?crypto.randomUUID():"ss-"+Date.now()+"-"+Math.random().toString(36).slice(2);
+const qs=new URLSearchParams(location.search);
+const tracking={source:qs.get("source")||"organic",landing_page:location.href,utm_source:qs.get("utm_source")||"",utm_medium:qs.get("utm_medium")||"",utm_campaign:qs.get("utm_campaign")||""};
 function setStatus(t,error=false){statusEl.textContent=t;statusEl.className="status"+(error?" error":"")}
 function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
 function getLocation(){return new Promise((resolve,reject)=>{if(!navigator.geolocation)return reject(new Error("Location is not supported by this browser."));navigator.geolocation.getCurrentPosition(p=>resolve({lat:p.coords.latitude,lng:p.coords.longitude}),()=>reject(new Error("Please allow location access in your browser.")),{enableHighAccuracy:true,timeout:8000,maximumAge:300000})})}
+async function track(event_type,extra={}){try{await fetch(FN,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({profile:document.getElementById("profile").value.trim()||"Unknown",event_type,session_id:sessionId,...tracking,...extra})})}catch(e){console.warn("Digital Score tracking unavailable",e)}}
 async function audit(){
  const input=document.getElementById("profile").value.trim();
  if(input.length<3){setStatus("Please paste your Google Maps / Business Profile link or business name.",true);return}
  const btn=document.getElementById("check");btn.disabled=true;setStatus("Checking your Google presence…");result.style.display="none";
  try{
+  await track("started");
   if(document.getElementById("useLocation").checked){setStatus("Getting your location and checking Google presence…");coords=await getLocation()}else coords=null;
-  const body={profile:input};if(coords){body.lat=coords.lat;body.lng=coords.lng}
+  const body={profile:input,session_id:sessionId,...tracking};if(coords){body.lat=coords.lat;body.lng=coords.lng}
   const r=await fetch(FN,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
   const d=await r.json();if(!r.ok)throw new Error(d?.error||"Unable to complete the score.");
   document.getElementById("scoreValue").textContent=d.audit?.score??0;
@@ -172,12 +177,13 @@ async function audit(){
   const p=d.place||{};const bits=[p.address,p.phone,p.website?'<a href="'+escapeHtml(p.website)+'" target="_blank" rel="noopener">Website</a>':"",p.rating?("Google rating: "+p.rating+" ("+(p.reviews||0)+" reviews)"):"",p.maps_url?'<a href="'+escapeHtml(p.maps_url)+'" target="_blank" rel="noopener">Open on Google Maps</a>':""].filter(Boolean);
   document.getElementById("business").innerHTML=bits.join(" · ");
   result.style.display="block";setStatus("Score ready.");result.scrollIntoView({behavior:"smooth",block:"start"});
+  await track("result_viewed",{business_name:p.name||input,city:(p.address||"").split(",").slice(-2,-1)[0]?.trim()||"",phone:p.phone||"",score:d.audit?.score??null});
  }catch(e){setStatus(e?.message||"Unable to complete the score.",true)}
  finally{btn.disabled=false}
 }
 document.getElementById("check").addEventListener("click",audit);
 document.getElementById("profile").addEventListener("keydown",e=>{if(e.key==="Enter")audit()});
-document.querySelectorAll("[data-plan]").forEach(b=>b.addEventListener("click",()=>{window.location.href="https://stallapp.stallwale.in/?upgrade=1&plan="+encodeURIComponent(b.dataset.plan)}));
-</script>
+document.querySelectorAll("[data-plan]").forEach(b=>b.addEventListener("click",()=>{track("cta_clicked",{business_name:document.getElementById("businessName").textContent||document.getElementById("profile").value.trim()});window.location.href="https://stallapp.stallwale.in/?upgrade=1&plan="+encodeURIComponent(b.dataset.plan)}));
+</script>>
 </body>
 </html>
