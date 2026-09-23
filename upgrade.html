@@ -653,7 +653,7 @@ document.querySelectorAll('.faq-q').forEach(btn=>{
   try{
     var q=new URLSearchParams(window.location.search);
     var passthrough="";
-    ["id","claim","new"].forEach(function(k){
+    ["id","claim","new","country"].forEach(function(k){
       var v=q.get(k);
       if(v) passthrough += "&" + encodeURIComponent(k) + "=" + encodeURIComponent(v);
     });
