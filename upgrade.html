@@ -477,7 +477,7 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
         <div class="popular-bar">MOST POPULAR</div>
         <h3>STall Verified</h3>
         <div class="tagline">Get discovered locally</div>
-        <div class="price">₹99 <small>One-Time</small></div>
+        <div class="price"><span data-price="verified">₹99</span> <small>One-Time</small></div>
         <ul class="features">
           <li>Everything in Free</li>
           <li>STall Verified badge</li>
@@ -486,13 +486,13 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
           <li>WhatsApp enquiries</li>
           <li>Business insights</li>
         </ul>
-        <a class="btn card-btn btn-ghost" data-plan-link="verified" href="https://stallapp.stallwale.in/?upgrade=1&plan=verified">Get STall Verified — ₹99</a>
+        <a class="btn card-btn btn-ghost" data-plan-link="verified" href="https://stallapp.stallwale.in/?upgrade=1&plan=verified">Get STall Verified — <span data-price="verified">₹99</span></a>
       </article>
 
       <article class="card">
         <h3>Digital Growth</h3>
         <div class="tagline">Build your online presence</div>
-        <div class="price">₹499 <small>Per Month</small></div>
+        <div class="price"><span data-price="digital_growth">₹499</span> <small>Per Month</small></div>
         <ul class="features">
           <li>Everything in STall Verified</li>
           <li>Visibility up to 5 KM</li>
@@ -502,13 +502,13 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
           <li>Growth action plan</li>
           <li>Free STall Landing Page</li>
         </ul>
-        <a class="btn card-btn btn-ghost" data-plan-link="digital_growth" href="https://stallapp.stallwale.in/?upgrade=1&plan=digital_growth">Get Digital Growth — ₹499</a>
+        <a class="btn card-btn btn-ghost" data-plan-link="digital_growth" href="https://stallapp.stallwale.in/?upgrade=1&plan=digital_growth">Get Digital Growth — <span data-price="digital_growth">₹499</span></a>
       </article>
 
       <article class="card">
         <h3>Growth Setup</h3>
         <div class="tagline">Turn visitors into orders</div>
-        <div class="price">₹999 <small>Per Month</small></div>
+        <div class="price"><span data-price="growth_setup">₹999</span> <small>Per Month</small></div>
         <ul class="features">
           <li>Everything in Digital Growth</li>
           <li>Visibility up to 25 KM</li>
@@ -519,7 +519,7 @@ footer{border-top:1px solid var(--border);padding:25px 0 35px}
           <li>STall CTA Page for Orders & Bookings</li>
           <li>Growth recommendations</li>
         </ul>
-        <a class="btn card-btn btn-ghost" data-plan-link="growth_setup" href="https://stallapp.stallwale.in/?upgrade=1&plan=growth_setup">Get Growth Setup — ₹999</a>
+        <a class="btn card-btn btn-ghost" data-plan-link="growth_setup" href="https://stallapp.stallwale.in/?upgrade=1&plan=growth_setup">Get Growth Setup — <span data-price="growth_setup">₹999</span></a>
       </article>
     </div>
 
@@ -626,6 +626,28 @@ document.querySelectorAll('.faq-q').forEach(btn=>{
 });
 </script>
 
+<script>
+(function(){
+  try{
+    var q=new URLSearchParams(window.location.search);
+    var country=(q.get("country")||"IN").toUpperCase();
+    var isUae=country==="AE";
+    if(isUae){
+      var prices={verified:"AED 20",digital_growth:"AED 100",growth_setup:"AED 299"};
+      document.querySelectorAll("[data-price]").forEach(function(el){
+        var key=el.getAttribute("data-price");
+        if(prices[key]) el.textContent=prices[key];
+      });
+      document.title="Upgrade Your Business — STall UAE";
+      var meta=document.querySelector('meta[name="description"]');
+      if(meta) meta.setAttribute("content","Choose your STall UAE plan: Free Listing, AED 20 Verified, AED 100 Digital Growth or AED 299/month Growth Setup.");
+      document.querySelectorAll(".compare th").forEach(function(th){
+        th.textContent=th.textContent.replace("₹99","AED 20").replace("₹499","AED 100").replace("₹999","AED 299");
+      });
+    }
+  }catch(e){ console.error("STall regional pricing:",e); }
+})();
+</script>
 <script>
 (function(){
   try{
