@@ -489,7 +489,8 @@ let geocoder = null;
 // null. Only 'IN' and 'AE' are wired to real pricing today — anything else
 // (a vendor outside both markets) falls back to 'IN' with the override
 // visible so they aren't silently charged the wrong currency.
-let detectedCountry = null;
+const registrationMarket = new URLSearchParams(window.location.search).get('market');
+let detectedCountry = registrationMarket === 'AE' ? 'AE' : registrationMarket === 'IN' ? 'IN' : null;
 let detectedRegion = null;
 let detectedCity = null;
 
@@ -524,7 +525,12 @@ function updateMarketDisplay() {
 }
 
 function applyMarketFromPlace(place) {
-  detectedCountry = countryFromPlace(place);
+  const placeCountry = countryFromPlace(place);
+  if (registrationMarket && placeCountry && placeCountry !== registrationMarket) {
+    setLocationStatus('err', registrationMarket === 'AE' ? 'Please select a UAE address.' : 'Please select an India address.');
+    return false;
+  }
+  detectedCountry = registrationMarket || placeCountry;
   const info = regionFromPlace(place);
   detectedRegion = info.region;
   detectedCity = info.city;
@@ -538,7 +544,7 @@ function setLocationStatus(kind, msg) {
 }
 
 function applyPlaceResult(place) {
-  applyMarketFromPlace(place);
+  if (applyMarketFromPlace(place) === false) return;
   const lat = typeof place.geometry.location.lat === 'function' ? place.geometry.location.lat() : place.geometry.location.lat;
   const lng = typeof place.geometry.location.lng === 'function' ? place.geometry.location.lng() : place.geometry.location.lng;
   document.getElementById('geo-lat').value = lat;
@@ -561,7 +567,7 @@ function initGoogleMaps() {
     // India and UAE are both live markets now — restricting further would
     // hide real addresses in Dubai/Abu Dhabi/Ajman. Add more country codes
     // here as Stall expands into new markets.
-    componentRestrictions: { country: ['in', 'ae'] },
+    componentRestrictions: { country: [registrationMarket === 'AE' ? 'ae' : registrationMarket === 'IN' ? 'in' : 'in'] },
   });
   geoAutocomplete.addListener('place_changed', () => {
     const place = geoAutocomplete.getPlace();
