@@ -871,6 +871,7 @@ document.getElementById('reg-form').addEventListener('submit', async (e) => {
     upgradeUrl.searchParams.set('id', vendorRef.id);
     upgradeUrl.searchParams.set('new', '1');
     upgradeUrl.searchParams.set('claim', claimCode);
+    upgradeUrl.searchParams.set('country', detectedCountry || registrationMarket || 'IN');
     window.location.href = upgradeUrl.toString();
     return;
 
