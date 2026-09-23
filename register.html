@@ -490,10 +490,45 @@ let geocoder = null;
 // (a vendor outside both markets) falls back to 'IN' with the override
 // visible so they aren't silently charged the wrong currency.
 let detectedCountry = null;
+let detectedRegion = null;
+let detectedCity = null;
 
 function countryFromPlace(place) {
   const comp = (place.address_components || []).find((c) => c.types.includes('country'));
-  return comp ? comp.short_name : null; // e.g. 'IN', 'AE'
+  return comp ? String(comp.short_name || '').toUpperCase() : null;
+}
+
+function regionFromPlace(place) {
+  const parts = place.address_components || [];
+  const admin = parts.find((c) => c.types.includes('administrative_area_level_1'));
+  const locality = parts.find((c) => c.types.includes('locality')) ||
+    parts.find((c) => c.types.includes('postal_town')) ||
+    parts.find((c) => c.types.includes('administrative_area_level_2'));
+  return { region: admin ? admin.long_name : null, city: locality ? locality.long_name : null };
+}
+
+function updateMarketDisplay() {
+  let el = document.getElementById('market-status');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'market-status';
+    el.style.cssText = 'margin-top:8px;font-size:.78rem;color:var(--muted);';
+    document.getElementById('location-status').insertAdjacentElement('afterend', el);
+  }
+  const label = detectedCountry === 'AE'
+    ? `🇦🇪 UAE · ${detectedRegion || 'Emirate'}`
+    : detectedCountry === 'IN'
+      ? `🇮🇳 India · ${detectedRegion || 'State'}`
+      : '';
+  el.textContent = label ? `Market detected: ${label}` : '';
+}
+
+function applyMarketFromPlace(place) {
+  detectedCountry = countryFromPlace(place);
+  const info = regionFromPlace(place);
+  detectedRegion = info.region;
+  detectedCity = info.city;
+  updateMarketDisplay();
 }
 
 function setLocationStatus(kind, msg) {
@@ -503,7 +538,7 @@ function setLocationStatus(kind, msg) {
 }
 
 function applyPlaceResult(place) {
-  detectedCountry = countryFromPlace(place);
+  applyMarketFromPlace(place);
   const lat = typeof place.geometry.location.lat === 'function' ? place.geometry.location.lat() : place.geometry.location.lat;
   const lng = typeof place.geometry.location.lng === 'function' ? place.geometry.location.lng() : place.geometry.location.lng;
   document.getElementById('geo-lat').value = lat;
@@ -671,6 +706,10 @@ addressInput.addEventListener('input', () => {
   document.getElementById('geo-lat').value = '';
   document.getElementById('geo-lng').value = '';
   document.getElementById('geo-formatted-address').value = '';
+  detectedCountry = null;
+  detectedRegion = null;
+  detectedCity = null;
+  updateMarketDisplay();
   if (addressInput.value.trim()) {
     setLocationStatus('pending', 'Pick a suggestion or use "Use my current location" to verify.');
   } else {
