@@ -522,7 +522,7 @@ function initGoogleMaps() {
   const input = document.getElementById('store-address');
   geocoder = new google.maps.Geocoder();
   geoAutocomplete = new google.maps.places.Autocomplete(input, {
-    fields: ['formatted_address', 'geometry', 'place_id'],
+    fields: ['formatted_address', 'geometry', 'place_id', 'address_components'],
     // India and UAE are both live markets now — restricting further would
     // hide real addresses in Dubai/Abu Dhabi/Ajman. Add more country codes
     // here as Stall expands into new markets.
