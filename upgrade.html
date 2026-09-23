@@ -696,5 +696,28 @@ document.querySelectorAll('.faq-q').forEach(btn=>{
 })();
 </script>
 
-</body>
+<script>
+(function(){
+  try{
+    var q=new URLSearchParams(location.search);
+    var market=(q.get("country")||"IN").toUpperCase();
+    function apply(m){
+      market=m==="AE"?"AE":"IN";
+      var url=new URL(location.href); url.searchParams.set("country",market);
+      history.replaceState(null,"",url.toString());
+      document.querySelectorAll("[data-upgrade-market]").forEach(function(b){b.style.opacity=b.getAttribute("data-upgrade-market")===market?"1":".55";});
+      document.querySelectorAll("[data-price]").forEach(function(el){
+        var key=el.getAttribute("data-price");
+        var map=market==="AE"?{verified:"AED 20",digital_growth:"AED 100",growth_setup:"AED 299"}:{verified:"₹99",digital_growth:"₹499",growth_setup:"₹999"};
+        if(map[key]) el.textContent=map[key];
+      });
+      var meta=document.querySelector('meta[name="description"]');
+      if(meta) meta.setAttribute("content",market==="AE"?"Choose your STall UAE plan: Free Listing, AED 20 Verified, AED 100 Digital Growth or AED 299/month Growth Setup.":"Choose your STall India plan: Free Listing, ₹99 Verified, ₹499 Digital Growth or ₹999/month Growth Setup.");
+      document.title=market==="AE"?"Upgrade Your Business — STall UAE":"Upgrade Your Business — STall India";
+    }
+    document.querySelectorAll("[data-upgrade-market]").forEach(function(b){b.addEventListener("click",function(){apply(b.getAttribute("data-upgrade-market"));});});
+    apply(market);
+  }catch(e){console.error("STall upgrade market switch:",e);}
+})();
+</script>\n</body>
 </html>
