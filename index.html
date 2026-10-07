@@ -3,8 +3,7 @@
 <html lang="en">
 <head>
 <meta name="stall-default-page" content="business-growth">
-<meta http-equiv="refresh" content="0;url=/business-growth.html">
-<script>window.location.replace("/business-growth.html" + window.location.search + window.location.hash);</script>
+<meta name="stall-business-profile-mode" content="supports-query-id">
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Stall | Find Local Businesses Near You</title>
@@ -414,8 +413,34 @@
   }
 
 </style>
+
+<style id="stall-business-profile-style">
+#stall-business-profile{display:none}
+body.stall-business-profile-mode>main,body.stall-business-profile-mode>header,body.stall-business-profile-mode>footer{display:none!important}
+body.stall-business-profile-mode #stall-business-profile{display:block}
+#stall-business-profile .stall-bp-wrap{max-width:960px;margin:0 auto;padding:40px 22px}
+#stall-business-profile .stall-bp-card{background:#161616;border:1px solid #2a2a2a;border-radius:18px;padding:30px;color:#fff}
+#stall-business-profile .stall-bp-eyebrow{color:#f0b429;font-weight:700;text-transform:uppercase;font-size:12px;letter-spacing:.08em}
+#stall-business-profile h1{font-size:clamp(32px,5vw,52px);margin:10px 0}
+#stall-business-profile .stall-bp-meta{color:#aaa;line-height:1.7}
+#stall-business-profile .stall-bp-rating{color:#f8cf6b;font-weight:700;margin:12px 0}
+#stall-business-profile .stall-bp-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+#stall-business-profile .stall-bp-btn{padding:12px 18px;border-radius:10px;text-decoration:none;font-weight:700;display:inline-block}
+#stall-business-profile .stall-bp-primary{background:#f0b429;color:#151000}
+#stall-business-profile .stall-bp-secondary{border:1px solid #444;color:#fff}
+</style>
 </head>
 <body>
+<section id="stall-business-profile" aria-live="polite">
+  <div class="stall-bp-wrap">
+    <div class="stall-bp-card" id="stall-business-profile-content">
+      <div class="stall-bp-eyebrow">STall Business Profile</div>
+      <h1>Loading business profile…</h1>
+      <p class="stall-bp-meta">Please wait while we load the business information.</p>
+    </div>
+  </div>
+</section>
+
 <svg aria-hidden="true" style="display:none">
 <defs>
 <symbol id="i-search" viewbox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line></symbol>
@@ -799,6 +824,45 @@
       },
       { timeout: 12000, enableHighAccuracy: true, maximumAge: 0 }
     );
+  });
+})();
+</script>
+
+<script id="stall-business-profile-router">
+(function(){
+  var id = new URLSearchParams(location.search).get('id');
+  if(!id) return;
+  document.body.classList.add('stall-business-profile-mode');
+  var root=document.getElementById('stall-business-profile-content');
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function setMeta(name,value){
+    var el=document.querySelector('meta[name="'+name+'"]');
+    if(el) el.setAttribute('content',value);
+  }
+  import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js').then(function(appMod){
+    return Promise.all([appMod,import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js')]);
+  }).then(function(mods){
+    var appMod=mods[0], fsMod=mods[1];
+    var firebaseConfig={apiKey:'AIzaSyAl2louJdlrfxy7c-uCEvzhxHpKvh4mf0E',authDomain:'stall-app-1aab7.firebaseapp.com',projectId:'stall-app-1aab7',storageBucket:'stall-app-1aab7.firebasestorage.app',messagingSenderId:'425143387624',appId:'1:425143387624:web:78de572da460e3852c105d'};
+    var db=fsMod.getFirestore(appMod.initializeApp(firebaseConfig));
+    return fsMod.getDoc(fsMod.doc(db,'vendors',id));
+  }).then(function(snap){
+    if(!snap.exists()) throw new Error('Business profile not found');
+    var v=Object.assign({id:snap.id},snap.data());
+    var name=v.name||'Local Business',cat=v.category||'Local Business',address=v.address||'',phone=v.phone||'',wa=v.whatsapp||v.phone||'',rating=typeof v.rating==='number'?v.rating:null,rc=v.ratingsCount==null?'':v.ratingsCount;
+    document.title=name+' | '+cat+' | STall';
+    setMeta('description',name+' — '+cat+(address?' in '+address:'')+'. Find contact details and business information on STall.');
+    var phoneUrl=phone?'tel:'+encodeURIComponent(phone):'';
+    var waUrl=wa?'https://wa.me/'+String(wa).replace(/\\D/g,''):'';
+    root.innerHTML='<div class="stall-bp-eyebrow">'+esc(cat)+'</div><h1>'+esc(name)+'</h1>'+(rating!==null?'<div class="stall-bp-rating">★ '+rating.toFixed(1)+(rc!==''?' ('+esc(rc)+' reviews)':'')+'</div>':'')+'<div class="stall-bp-meta">'+esc(address)+'</div><div class="stall-bp-actions">'+(phone?'<a class="stall-bp-btn stall-bp-primary" href="'+phoneUrl+'">Call Business</a>':'')+(wa?'<a class="stall-bp-btn stall-bp-secondary" href="'+waUrl+'" target="_blank" rel="noopener">WhatsApp</a>':'')+(address?'<a class="stall-bp-btn stall-bp-secondary" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(address)+'" target="_blank" rel="noopener">Get Directions</a>':'')+'</div><div class="stall-bp-meta" style="margin-top:30px"><h2 style="color:#fff">About this business</h2><p>Discover '+esc(name)+' on STall and connect with this local business.</p></div>';
+    var ld={'@context':'https://schema.org','@type':'LocalBusiness','name':name,'url':location.href};
+    if(address) ld.address={'@type':'PostalAddress','streetAddress':address};
+    if(phone) ld.telephone=phone;
+    if(rating!==null) ld.aggregateRating={'@type':'AggregateRating','ratingValue':rating,'bestRating':5};
+    var s=document.createElement('script');s.type='application/ld+json';s.textContent=JSON.stringify(ld);document.head.appendChild(s);
+  }).catch(function(e){
+    console.error(e);
+    root.innerHTML='<div class="stall-bp-eyebrow">STall Business Profile</div><h1>Business profile not available</h1><p class="stall-bp-meta">We could not load this business profile right now.</p>';
   });
 })();
 </script>
